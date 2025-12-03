@@ -95,7 +95,7 @@
         <!-- Area Scrollable Konten Dashboard -->
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-6">
             
-            <h3 class="text-xl font-semibold text-gray-700 mb-6">General Statistics</h3>
+            <h3 class="text-xl font-semibold text-gray-700 mb-6">General Statistic</h3>
             
             <!-- 1. Statistik Ringkasan (Cards) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
