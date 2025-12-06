@@ -86,27 +86,21 @@
             {{-- ========= Left Column ========= --}}
             <div class="space-y-6">
 
-                {{-- CLASSES --}}
+                {{-- STUDENT --}}
                 <div class="bg-white border rounded-lg p-4 shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3">Classes</h2>
+                    <h2 class="text-xl font-semibold mb-3">Student</h2>
 
                     <div class="border rounded-lg p-4">
                         <div class="flex justify-between text-gray-700 font-semibold mb-2">
                             <span>Name</span>
-                            <span>Students</span>
-                            <span>Schedule</span>
                         </div>
 
                         <div class="space-y-2 text-gray-400">
                             <div class="flex justify-between">
                                 <span>──────</span>
-                                <span>───</span>
-                                <span>────</span>
                             </div>
                             <div class="flex justify-between">
                                 <span>──────</span>
-                                <span>───</span>
-                                <span>────</span>
                             </div>
                         </div>
 
