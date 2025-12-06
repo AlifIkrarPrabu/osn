@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// Pastikan model-model ini diimpor dengan benar
 use App\Models\User; 
 use App\Models\Course; 
 
