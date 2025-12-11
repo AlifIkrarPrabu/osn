@@ -34,8 +34,9 @@
                 <span>👥</span> Students
             </a>
 
-            <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
-                <span>📄</span> Materials
+            <a href="{{ url('/guru/materials') }}"
+               class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
+                <span>📄</span> Materi
             </a>
 
             <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">

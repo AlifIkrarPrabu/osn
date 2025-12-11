@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController; 
 use App\Http\Controllers\UserController; 
 use App\Http\Controllers\GuruDashboardController;
+use App\Http\Controllers\MaterialController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -56,16 +57,38 @@ Route::middleware(['auth', 'role:admin'])
     });
 
 // =======================================================
-// GURU DASHBOARD (DINAMIS ✅)
+// GURU DASHBOARD (DINAMIS + MATERI & TUGAS)
 // =======================================================
 Route::middleware(['auth', 'role:guru'])->group(function () {
 
+    // DASHBOARD GURU
     Route::get('/guru/dashboard', [GuruDashboardController::class, 'index'])
         ->name('guru.dashboard');
 
-    // ✅ HALAMAN DAFTAR SISWA
+    // ✨ HALAMAN DAFTAR SISWA
     Route::get('/guru/students', [GuruDashboardController::class, 'students'])
         ->name('guru.students');
+
+    // ===================================================
+    // ✨ MATERI
+    // ===================================================
+    Route::get('/guru/materials', [MaterialController::class, 'index'])
+        ->name('guru.materials.index');
+
+    Route::get('/guru/materials/create', [MaterialController::class, 'create'])
+        ->name('guru.materials.create');
+
+    Route::post('/guru/materials', [MaterialController::class, 'store'])
+        ->name('guru.materials.store');
+
+    Route::get('/guru/materials/{id}', [MaterialController::class, 'show'])
+        ->name('guru.materials.show');
+
+    // ===================================================
+    // ✨ TUGAS DALAM MATERI (Pilihan Ganda / Essay)
+    // ===================================================
+    Route::post('/guru/materials/{id}/tasks', [MaterialController::class, 'storeTask'])
+        ->name('guru.tasks.store');
 
 });
 
