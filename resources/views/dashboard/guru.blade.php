@@ -36,8 +36,9 @@
             <span>📊</span> Dashboard
         </a>
 
-        <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
-            <span>📚</span> Classes
+        <a href="{{ url('/guru/students') }}"
+            class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
+            <span>👥</span> Students
         </a>
 
         <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
@@ -86,27 +87,68 @@
             {{-- ========= Left Column ========= --}}
             <div class="space-y-6">
 
-                {{-- STUDENT --}}
-                <div class="bg-white border rounded-lg p-4 shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3">Student</h2>
+               
+{{-- ===================== --}}
+{{-- STUDENT (DINAMIS) --}}
+{{-- ===================== --}}
+<div class="bg-white border rounded-lg p-4 shadow-sm">
 
-                    <div class="border rounded-lg p-4">
-                        <div class="flex justify-between text-gray-700 font-semibold mb-2">
-                            <span>Name</span>
-                        </div>
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Student</h2>
+        <span class="text-sm text-gray-500">
+            Total: {{ $totalStudents }}
+        </span>
+    </div>
 
-                        <div class="space-y-2 text-gray-400">
-                            <div class="flex justify-between">
-                                <span>──────</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>──────</span>
-                            </div>
-                        </div>
+    <div class="border rounded-lg p-4">
 
-                        <button class="mt-4 border px-4 py-1 rounded-lg">View More</button>
-                    </div>
+        {{-- HEADER --}}
+        <div class="grid grid-cols-12 gap-4 text-gray-700 font-semibold pb-2 border-b">
+            <div class="col-span-1">No</div>
+            <div class="col-span-5">Name</div>
+            <div class="col-span-6">Email</div>
+        </div>
+
+        {{-- DATA --}}
+        @forelse ($students as $student)
+            <div class="grid grid-cols-12 gap-4 items-center py-2 border-b text-gray-600 last:border-b-0">
+
+                {{-- NO --}}
+                <div class="col-span-1 text-sm text-gray-500 font-semibold">
+                    {{ $loop->iteration }}
                 </div>
+
+                {{-- NAME --}}
+                <div class="col-span-5 font-medium">
+                    {{ $student->name }}
+                </div>
+
+                {{-- EMAIL --}}
+                <div class="col-span-6 text-sm">
+                    {{ $student->email }}
+                </div>
+
+            </div>
+        @empty
+            <div class="py-4 text-center text-gray-400">
+                Tidak ada data siswa
+            </div>
+        @endforelse
+
+        {{-- VIEW MORE --}}
+        <div class="mt-4 text-right">
+            <a href="{{ route('guru.students') }}"
+                class="border px-4 py-1 rounded-lg hover:bg-gray-100 transition">
+                    View More
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+
+
 
                 {{-- GRADES --}}
                 <div class="bg-white border rounded-lg p-4 shadow-sm">

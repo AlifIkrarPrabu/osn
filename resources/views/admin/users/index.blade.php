@@ -139,9 +139,8 @@
     </button>
 
 
-    {{-- ===================== --}}
-{{-- TABEL USER (FIXED) --}}
-{{-- ===================== --}}
+
+{{-- TABEL USER --}}
 
 <div class="bg-white rounded-lg shadow overflow-hidden">
 
@@ -156,7 +155,7 @@
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No.</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Role</th>
                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Aksi</th>
                 </tr>
             </thead>
@@ -178,11 +177,11 @@
                                 {{ $user->name }}
                             </td>
 
-                            <td class="px-4 py-3 text-sm text-gray-500">
+                            <td class="px-4 py-3 text-sm text-center text-gray-500">
                                 {{ $user->email }}
                             </td>
 
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 text-center">
                                 <span class="px-2 inline-flex text-xs font-semibold rounded-full
                                     @if($user->role === 'admin') bg-indigo-100 text-indigo-800
                                     @elseif($user->role === 'guru') bg-yellow-100 text-yellow-800
