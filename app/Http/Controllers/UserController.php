@@ -18,7 +18,7 @@ class UserController extends Controller
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
             })
-            ->paginate(10);
+            ->paginate(5);
 
         return view('admin.users.index', compact('users', 'search'));
     }
