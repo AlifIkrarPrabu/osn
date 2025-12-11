@@ -4,7 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController; 
 use App\Http\Controllers\AdminDashboardController; 
 use App\Http\Controllers\UserController; 
+use App\Http\Controllers\GuruDashboardController;
 use Illuminate\Support\Facades\Route;
+
 
 // =======================================================
 // ROOT ROUTE
@@ -27,40 +29,51 @@ Route::middleware('auth')->group(function () {
 // =======================================================
 // ADMIN AREA
 // =======================================================
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    // Dashboard Admin
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        // Dashboard Admin
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
 
-    // User Management
-    Route::resource('users', UserController::class)->only([
-        'index', 'destroy'
-    ]);
+        // User Management
+        Route::resource('users', UserController::class)->only([
+            'index', 'destroy'
+        ]);
 
-    // Custom update route
-    Route::patch('users/{user}', [UserController::class, 'updateDetails'])
-        ->name('users.update_details');
+        // Custom update route
+        Route::patch('users/{user}', [UserController::class, 'updateDetails'])
+            ->name('users.update_details');
 
-    // CREATE USER (TAMBAHAN BARU)
-    Route::post('users', [UserController::class, 'store'])
-        ->name('users.store');
+        // CREATE USER
+        Route::post('users', [UserController::class, 'store'])
+            ->name('users.store');
 
-    Route::post('/admin/users/store', [UserController::class, 'store'])
-        ->name('admin.users.store');
-});
+        Route::post('/admin/users/store', [UserController::class, 'store'])
+            ->name('admin.users.store');
+    });
 
-// Dashboard Guru
+// =======================================================
+// GURU DASHBOARD (DINAMIS ✅)
+// =======================================================
 Route::middleware(['auth', 'role:guru'])->group(function () {
-    Route::get('/guru/dashboard', function () {
-        return view('dashboard.guru');
-    })->name('guru.dashboard');
+
+    Route::get('/guru/dashboard', [GuruDashboardController::class, 'index'])
+        ->name('guru.dashboard');
+
 });
 
-// Dashboard Siswa
+// =======================================================
+// SISWA DASHBOARD
+// =======================================================
 Route::middleware(['auth', 'role:siswa'])->group(function () {
+
     Route::get('/siswa/dashboard', function () {
         return view('dashboard.siswa');
     })->name('siswa.dashboard');
+
 });
 
 require __DIR__.'/auth.php';
