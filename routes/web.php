@@ -63,6 +63,10 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/guru/dashboard', [GuruDashboardController::class, 'index'])
         ->name('guru.dashboard');
 
+    // ✅ HALAMAN DAFTAR SISWA
+    Route::get('/guru/students', [GuruDashboardController::class, 'students'])
+        ->name('guru.students');
+
 });
 
 // =======================================================

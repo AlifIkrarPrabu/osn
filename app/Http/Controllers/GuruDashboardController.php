@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\User;
 
 class GuruDashboardController extends Controller
@@ -19,4 +20,22 @@ class GuruDashboardController extends Controller
 
         return view('dashboard.guru', compact('students', 'totalStudents'));
     }
+
+    public function students(Request $request)
+    {
+        $search = $request->search;
+
+        $students = User::where('role', 'siswa')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('name')
+            ->get();
+
+        return view('guru.students.index', compact('students', 'search'));
+    }
+
 }

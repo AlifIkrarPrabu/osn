@@ -36,8 +36,9 @@
             <span>📊</span> Dashboard
         </a>
 
-        <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
-            <span>📚</span> Classes
+        <a href="{{ url('/guru/students') }}"
+            class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
+            <span>👥</span> Students
         </a>
 
         <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
@@ -136,10 +137,11 @@
 
         {{-- VIEW MORE --}}
         <div class="mt-4 text-right">
-            <a href="{{ route('guru.dashboard') }}"
-               class="border px-4 py-1 rounded-lg hover:bg-gray-100 transition">
-                View More
+            <a href="{{ route('guru.students') }}"
+                class="border px-4 py-1 rounded-lg hover:bg-gray-100 transition">
+                    View More
             </a>
+
         </div>
 
     </div>
