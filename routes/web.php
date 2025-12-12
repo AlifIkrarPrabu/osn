@@ -84,11 +84,27 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/guru/materials/{id}', [MaterialController::class, 'show'])
         ->name('guru.materials.show');
 
+    Route::get('/guru/materials/{id}/edit', [MaterialController::class, 'edit'])
+        ->name('guru.materials.edit');
+
+    Route::patch('/guru/materials/{id}', [MaterialController::class, 'update'])
+        ->name('guru.materials.update');
+
+    Route::delete('/guru/materials/{id}', [MaterialController::class, 'destroy'])
+        ->name('guru.materials.destroy');
+
     // ===================================================
     // ✨ TUGAS DALAM MATERI (Pilihan Ganda / Essay)
     // ===================================================
     Route::post('/guru/materials/{id}/tasks', [MaterialController::class, 'storeTask'])
         ->name('guru.tasks.store');
+
+    // TASKS AJAX
+    Route::post('/guru/materials/task/{taskId}/update', [MaterialController::class, 'updateTask'])
+        ->name('guru.tasks.update');
+
+    Route::delete('/guru/materials/task/{taskId}/delete', [MaterialController::class, 'deleteTask'])
+        ->name('guru.tasks.delete');
 
 });
 
