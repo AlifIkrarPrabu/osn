@@ -44,6 +44,43 @@ class MaterialController extends Controller
     }
 
     // ================================
+    // EDIT MATERIAL
+    // ================================
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'nullable'
+        ]);
+
+        $material = Material::where('teacher_id', Auth::id())->findOrFail($id);
+
+        $material->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Materi berhasil diperbarui'
+        ]);
+    }
+
+
+
+    // ================================
+    // HAPUS MATERIAL
+    // ================================
+    public function destroy($id)
+    {
+        $material = Material::where('teacher_id', Auth::id())->findOrFail($id);
+        $material->delete();
+
+        return redirect()->route('guru.materials.index')
+            ->with('success', 'Materi berhasil dihapus');
+    }
+
+    // ================================
     // SHOW MATERIAL + TASKS
     // ================================
     public function show($id)
@@ -78,4 +115,59 @@ class MaterialController extends Controller
 
         return back()->with('success', 'Tugas berhasil ditambahkan');
     }
+    
+    // ================================
+    // UPDATE TASK (AJAX)
+    // ================================
+    public function updateTask(Request $request, $taskId)
+    {
+        $request->validate([
+            'type' => 'required',
+            'question' => 'required',
+        ]);
+
+        $task = Task::findOrFail($taskId);
+
+        // keamanan → pastikan guru pemilik material
+        if ($task->material->teacher_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $task->update([
+            'type' => $request->type,
+            'question' => $request->question,
+            'option_a' => $request->option_a,
+            'option_b' => $request->option_b,
+            'option_c' => $request->option_c,
+            'option_d' => $request->option_d,
+            'correct_answer' => $request->correct_answer,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tugas berhasil diperbarui'
+        ]);
+    }
+
+
+
+    // ================================
+    // DELETE TASK (AJAX)
+    // ================================
+    public function deleteTask($taskId)
+    {
+        $task = Task::findOrFail($taskId);
+
+        if ($task->material->teacher_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $task->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tugas berhasil dihapus'
+        ]);
+    }
+
 }
