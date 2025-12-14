@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Material;
+use Illuminate\Support\Facades\Auth;
 
 class GuruDashboardController extends Controller
 {
@@ -18,7 +20,12 @@ class GuruDashboardController extends Controller
         // Total siswa
         $totalStudents = User::where('role', 'siswa')->count();
 
-        return view('dashboard.guru', compact('students', 'totalStudents'));
+        $materials = Material::where('teacher_id', Auth::id())
+            ->latest()
+            ->take(2)
+            ->get();
+
+        return view('dashboard.guru', compact('students', 'totalStudents', 'materials'));
     }
 
     public function students(Request $request)
