@@ -166,20 +166,52 @@
             <div class="space-y-6">
 
                 {{-- MATERIALS --}}
-                <div class="bg-white border rounded-lg p-4 shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3">Materials & Assignments</h2>
+<div class="bg-white border rounded-lg p-4 shadow-sm">
+    <div class="flex justify-between items-center mb-3">
+        <h2 class="text-xl font-semibold">Materials</h2>
 
-                    <div class="border rounded-lg p-4 flex items-start gap-3">
-                        <div class="w-10 h-10 bg-gray-300 rounded"></div>
+        {{-- VIEW MORE --}}
+        <a href="{{ route('guru.materials.index') }}"
+           class="text-sm text-blue-600 hover:underline">
+            View More →
+        </a>
+    </div>
 
-                        <div class="flex-1 space-y-2 text-gray-400">
-                            <div class="h-3 bg-gray-300 rounded w-3/4"></div>
-                            <div class="h-3 bg-gray-300 rounded w-2/3"></div>
-                        </div>
+    {{-- LIST MATERIAL (MAX 2) --}}
+    <div class="space-y-3">
+        @forelse ($materials as $material)
+            <div class="border rounded-lg p-4 flex items-start gap-3 hover:bg-gray-50 transition">
 
-                        <button class="border px-4 py-1 rounded-lg">View More</button>
-                    </div>
+                {{-- ICON --}}
+                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded flex items-center justify-center font-bold">
+                    📄
                 </div>
+
+                {{-- CONTENT --}}
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-800">
+                        {{ $material->title }}
+                    </h3>
+
+                    <p class="text-sm text-gray-500">
+                        {{ Str::limit($material->description, 60) }}
+                    </p>
+                </div>
+
+                {{-- DETAIL --}}
+                <a href="{{ route('guru.materials.show', $material->id) }}"
+                   class="text-sm text-blue-600 hover:underline">
+                    Detail
+                </a>
+            </div>
+        @empty
+            <p class="text-gray-500 text-sm">
+                Belum ada materi
+            </p>
+        @endforelse
+    </div>
+</div>
+
 
                 {{-- DISCUSSION --}}
                 <div class="bg-white border rounded-lg p-4 shadow-sm">
