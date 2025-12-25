@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\Siswa\DashboardController as SiswaDashboardController;
+use App\Http\Controllers\Siswa\MaterialController as SiswaMaterialController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -113,9 +114,16 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
 // =======================================================
 // SISWA DASHBOARD
 // =======================================================
-Route::middleware(['auth', 'role:siswa'])->group(function () {
-    Route::get('/siswa/dashboard', [SiswaDashboardController::class, 'index'])
-        ->name('siswa.dashboard');
+Route::middleware(['auth', 'role:siswa'])
+    ->prefix('siswa')
+    ->name('siswa.')
+    ->group(function () {
+
+        Route::get('/dashboard', [SiswaDashboardController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/materials/{material}', [SiswaMaterialController::class, 'show'])
+            ->name('materials.show');
 });
 
 require __DIR__.'/auth.php';
