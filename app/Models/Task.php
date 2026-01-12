@@ -21,4 +21,9 @@ class Task extends Model
     {
         return $this->belongsTo(Material::class);
     }
+
+    public function answers()
+    {
+        return $this->hasMany(StudentAnswer::class);
+    }
 }
