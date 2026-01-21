@@ -13,60 +13,84 @@
         </div>
     @endif
 
+    {{-- TIMER --}}
+    <div class="bg-red-50 border border-red-300 p-4 rounded mb-6 text-center">
+        <p class="font-semibold text-red-700">
+            Sisa Waktu:
+            <span id="timer" class="text-xl font-bold"></span>
+        </p>
+    </div>
+
     {{-- FORM --}}
-    <form method="POST" action="{{ route('siswa.tasks.answer') }}">
+    <form method="POST"
+          id="examForm"
+          action="{{ route('siswa.answers.store', $material->id) }}">
         @csrf
 
-        @foreach($material->tasks as $task)
-            <div class="border rounded-lg p-4 mb-4 {{ $isLocked ? 'opacity-60' : '' }}">
-                <p class="font-semibold mb-2">
-                    {{ $loop->iteration }}. {{ $task->question }}
-                </p>
+        @foreach ($material->tasks as $task)
+            <div class="border p-4 rounded mb-4">
+                <p class="font-medium mb-2">{{ $task->question }}</p>
 
-                <input type="hidden" name="tasks[{{ $task->id }}][task_id]" value="{{ $task->id }}">
-
-                {{-- PILIHAN GANDA --}}
-                @if($task->type === 'multiple_choice')
-                    @foreach(['a','b','c','d'] as $opt)
-                        @php $field = 'option_'.$opt; @endphp
-                        @if($task->$field)
-                            <label class="block mb-1">
-                                <input
-                                    type="radio"
-                                    name="tasks[{{ $task->id }}][answer]"
-                                    value="{{ $task->$field }}"
-                                    {{ $isLocked ? 'disabled' : 'required' }}
-                                >
-                                {{ strtoupper($opt) }}. {{ $task->$field }}
-                            </label>
-                        @endif
+                @if ($task->type === 'multiple_choice')
+                    @foreach (['a','b','c','d'] as $opt)
+                        <label class="block">
+                            <input type="radio"
+                                   name="answers[{{ $task->id }}]"
+                                   value="{{ $opt }}"
+                                   {{ ($answers[$task->id] ?? null) === $opt ? 'checked' : '' }}
+                                   {{ $isLocked ? 'disabled' : '' }}>
+                            {{ strtoupper($opt) }}.
+                            {{ $task->{'option_'.$opt} }}
+                        </label>
                     @endforeach
-                @endif
-
-                {{-- ESSAY --}}
-                @if($task->type === 'essay')
-                    <textarea
-                        name="tasks[{{ $task->id }}][answer]"
-                        rows="4"
-                        class="w-full border rounded p-2"
-                        placeholder="Tulis jawaban Anda..."
-                        {{ $isLocked ? 'disabled' : 'required' }}
-                    ></textarea>
+                @else
+                    <textarea name="answers[{{ $task->id }}]"
+                              class="w-full border rounded p-2"
+                              {{ $isLocked ? 'disabled' : '' }}>{{ $answers[$task->id] ?? '' }}</textarea>
                 @endif
             </div>
         @endforeach
 
-        {{-- 🔥 TOMBOL SUBMIT HANYA JIKA BELUM TERKUNCI --}}
-        @unless($isLocked)
-            <div class="text-right mt-6">
-                <button type="submit"
-                    class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                    Kirim Semua Jawaban
-                </button>
-            </div>
-        @endunless
-
+        @if (!$isLocked)
+            <button type="submit"
+                    class="bg-blue-600 text-white px-6 py-2 rounded"
+                    id="submitBtn">
+                Kirim Semua Jawaban
+            </button>
+        @else
+            <p class="text-center text-red-600 font-semibold">
+                ⛔ Waktu ujian telah berakhir
+            </p>
+        @endif
     </form>
 
 </div>
+
+{{-- SCRIPT TIMER --}}
+@if (!$isLocked)
+<script>
+let remaining = Math.floor({{ $remainingSeconds }});
+const timerEl = document.getElementById('timer');
+const form = document.getElementById('examForm');
+
+const interval = setInterval(() => {
+    let minutes = Math.floor(remaining / 60);
+    let seconds = remaining % 60;
+
+    timerEl.innerText =
+        minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+    if (remaining <= 0) {
+        clearInterval(interval);
+        form.submit(); // AUTO SUBMIT
+    }
+
+    remaining--;
+}, 1000);
+</script>
+@else
+<script>
+document.getElementById('timer').innerText = '00:00';
+</script>
+@endif
 @endsection

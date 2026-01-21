@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->integer('duration')->default(30); // menit
         });
     }
 
