@@ -31,12 +31,15 @@ class MaterialController extends Controller
     {
         $request->validate([
             'title' => 'required',
+            'description' => 'nullable',
+            'duration' => 'required|integer|min:1', // ⬅️ VALIDASI WAKTU
         ]);
 
         Material::create([
             'teacher_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
+            'duration' => $request->duration, // ⬅️ SIMPAN WAKTU UJIAN
         ]);
 
         return redirect()->route('guru.materials.index')

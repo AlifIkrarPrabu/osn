@@ -16,7 +16,7 @@
 {{-- =========================== --}}
 <div class="flex">
 
-    {{-- =========================== --}}
+{{-- =========================== --}}
 {{-- SIDEBAR --}}
 {{-- =========================== --}}
 <aside id="sidebar"
@@ -75,7 +75,7 @@
         class="fixed inset-0 bg-black bg-opacity-40 hidden z-30 lg:hidden">
     </div>
 
-<div class="max-w-4xl mx-auto py-6">
+<div class="max-w-4xl w-full mx-auto py-6">
 
     <h1 class="text-2xl font-semibold mb-2">{{ $material->title }}</h1>
     <p class="text-gray-600 mb-6">{{ $material->description }}</p>
@@ -83,7 +83,7 @@
     {{-- ================================ --}}
     {{-- FORM TAMBAH TUGAS --}}
     {{-- ================================ --}}
-    <div class="bg-white p-4 border rounded-lg mb-6">
+    <div class="bg-white p-4 border rounded-lg mb-6 w-full">
         <h2 class="font-semibold mb-3">Tambah Tugas</h2>
 
         <form action="{{ route('guru.tasks.store', $material->id) }}" method="POST">

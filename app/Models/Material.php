@@ -10,6 +10,7 @@ class Material extends Model
         'title',
         'description',
         'teacher_id',
+        'duration',
     ];
 
     public function tasks()
