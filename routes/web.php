@@ -9,6 +9,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\Siswa\DashboardController as SiswaDashboardController;
 use App\Http\Controllers\Siswa\MaterialController as SiswaMaterialController;
 use App\Http\Controllers\Siswa\TaskAnswerController;
+use App\Http\Controllers\Siswa\AnswerController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -128,6 +129,9 @@ Route::middleware(['auth', 'role:siswa'])
 
         Route::post('/tasks/answer', [TaskAnswerController::class, 'store'])
             ->name('tasks.answer');
+        
+        Route::post('/materials/{material}/answers',[AnswerController::class, 'store'])
+        ->name('answers.store');
 });
 
 require __DIR__.'/auth.php';
