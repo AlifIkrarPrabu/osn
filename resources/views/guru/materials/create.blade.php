@@ -92,6 +92,16 @@
             <textarea name="description" class="w-full border p-2 rounded"></textarea>
         </div>
 
+        <div class="mb-4">
+            <label class="block font-medium">Waktu Ujian (menit)</label>
+            <input type="number"
+                name="duration"
+                min="1"
+                required
+                class="w-full border rounded p-2"
+                placeholder="Contoh: 20">
+        </div>
+
         <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">
             Simpan
         </button>
