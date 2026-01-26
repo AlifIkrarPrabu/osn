@@ -105,10 +105,12 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
         ->name('guru.tasks.store');
 
     // TASKS AJAX
-    Route::post('/guru/materials/task/{taskId}/update', [MaterialController::class, 'updateTask'])
+    
+
+    Route::put('/guru/tasks/{task}', [MaterialController::class, 'updateTask'])
         ->name('guru.tasks.update');
 
-    Route::delete('/guru/materials/task/{taskId}/delete', [MaterialController::class, 'deleteTask'])
+    Route::delete('/guru/tasks/{task}', [MaterialController::class, 'deleteTask'])
         ->name('guru.tasks.delete');
 
 });
@@ -131,7 +133,7 @@ Route::middleware(['auth', 'role:siswa'])
             ->name('tasks.answer');
         
         Route::post('/materials/{material}/answers',[AnswerController::class, 'store'])
-        ->name('answers.store');
+            ->name('answers.store');
 });
 
 require __DIR__.'/auth.php';
