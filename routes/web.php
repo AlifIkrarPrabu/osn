@@ -74,6 +74,9 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/guru/students', [GuruDashboardController::class, 'students'])
         ->name('guru.students');
 
+    Route::get('/guru/materials/{id}/report', [MaterialController::class, 'report'])
+        ->name('guru.materials.report');
+
     // ===================================================
     // ✨ MATERI
     // ===================================================

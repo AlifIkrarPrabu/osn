@@ -19,4 +19,14 @@ class ExamSession extends Model
         'ended_at' => 'datetime',
         'is_finished' => 'boolean',
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'student_id');
+    }
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
+    }
 }
