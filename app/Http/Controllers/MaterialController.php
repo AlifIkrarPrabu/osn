@@ -6,6 +6,8 @@ use App\Models\Material;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ExamSession;
+use App\Models\StudentAnswer;
 
 class MaterialController extends Controller
 {
@@ -171,6 +173,60 @@ class MaterialController extends Controller
             'success' => true,
             'message' => 'Tugas berhasil dihapus'
         ]);
+    }
+
+    public function report($id)
+    {
+        $material = Material::with('tasks')
+            ->where('teacher_id', Auth::id())
+            ->findOrFail($id);
+
+        $sessions = ExamSession::where('material_id', $id)
+            ->where('is_finished', true)
+            ->with('student')
+            ->get();
+
+        $reports = $sessions->map(function ($session) use ($material) {
+            $studentAnswers = StudentAnswer::where('student_id', $session->student_id)
+                ->whereIn('task_id', $material->tasks->pluck('id'))
+                ->get()
+                ->keyBy('task_id');
+
+            $correctCount = 0;
+            $totalMultipleChoice = 0;
+
+            foreach ($material->tasks as $task) {
+                if ($task->type === 'multiple_choice') {
+                    $totalMultipleChoice++;
+                    $answer = $studentAnswers->get($task->id);
+                    if ($answer && trim(strtoupper($answer->answer)) === trim(strtoupper($task->correct_answer))) {
+                        $correctCount++;
+                    }
+                }
+            }
+
+            $score = $totalMultipleChoice > 0 ? ($correctCount / $totalMultipleChoice) * 100 : 0;
+
+            // --- HITUNG DURASI PENGERJAAN ---
+            $startTime = $session->created_at;
+            $endTime = $session->updated_at;
+            $diffInSeconds = $startTime->diffInSeconds($endTime);
+            
+            $minutes = floor($diffInSeconds / 60);
+            $seconds = $diffInSeconds % 60;
+            $durationString = ($minutes > 0 ? $minutes . " menit " : "") . $seconds . " detik";
+
+            return [
+                'student_name' => $session->student->name,
+                'correct' => $correctCount,
+                'total_mc' => $totalMultipleChoice,
+                'score' => round($score, 1),
+                'finished_at' => $endTime, // Objek Carbon
+                'duration' => $durationString,
+            ];
+        });
+
+        return view('guru.materials.report', compact('material', 'reports'));
     }
 
 }

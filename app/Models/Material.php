@@ -17,4 +17,9 @@ class Material extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function examSessions()
+    {
+        return $this->hasMany(ExamSession::class);
+    }
 }

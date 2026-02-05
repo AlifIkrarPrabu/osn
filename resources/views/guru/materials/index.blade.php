@@ -143,6 +143,11 @@
                         </button>
                     </form>
 
+                    <a href="{{ route('guru.materials.report', $material->id) }}" 
+                        class="text-green-600 hover:text-green-900 mr-3 font-semibold hover:underline">
+                        Laporan Nilai
+                    </a>
+
                 </div>
 
             </div>
