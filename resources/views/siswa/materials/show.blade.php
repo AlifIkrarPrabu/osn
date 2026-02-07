@@ -91,24 +91,51 @@
 {{-- SCRIPT TIMER --}}
 @if (!$isLocked)
 <script>
-    let remaining = Math.floor({{ $remainingSeconds }});
+    // Gunakan durasi dalam detik dari server
+    let durationInSeconds = {{ $remainingSeconds }};
+    
+    // Hitung "Kapan ujian ini harus berakhir" berdasarkan waktu saat ini + sisa detik
+    // Ini disimpan di sessionStorage agar jika refresh dalam detik yang sama, tidak melompat
+    let endTime = localStorage.getItem('exam_end_time_' + {{ $material->id }});
+    
+    if (!endTime) {
+        endTime = Math.floor(Date.now() / 1000) + durationInSeconds;
+        localStorage.setItem('exam_end_time_' + {{ $material->id }}, endTime);
+    }
+
     const timerEl = document.getElementById('timer');
     const form = document.getElementById('examForm');
 
-    const interval = setInterval(() => {
-        let minutes = Math.floor(remaining / 60);
-        let seconds = remaining % 60;
-
-        timerEl.innerText =
-            minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    function updateTimer() {
+        let now = Math.floor(Date.now() / 1000);
+        let remaining = endTime - now;
 
         if (remaining <= 0) {
             clearInterval(interval);
-            form.submit(); // AUTO SUBMIT
+            timerEl.innerText = '00:00';
+            localStorage.removeItem('exam_end_time_' + {{ $material->id }});
+            
+            // Tambahkan proteksi agar tidak submit berkali-kali saat refresh di detik 0
+            form.submit(); 
+            return;
         }
 
-        remaining--;
-    }, 1000);
+        let minutes = Math.floor(remaining / 60);
+        let seconds = remaining % 60;
+
+        timerEl.innerText = 
+            (minutes < 10 ? '0' : '') + minutes + ':' + 
+            (seconds < 10 ? '0' : '') + seconds;
+    }
+
+    // Jalankan segera saat load
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+
+    // Hapus localStorage saat form disubmit manual agar tidak mengganggu ujian berikutnya
+    form.addEventListener('submit', function() {
+        localStorage.removeItem('exam_end_time_' + {{ $material->id }});
+    });
 </script>
 @else
 <script>
