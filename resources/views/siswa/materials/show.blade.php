@@ -84,6 +84,15 @@
                 </div>
             @endif
         </div>
+        <div class="w-full flex justify-center">
+                <a href="{{ route('siswa.materials.index') }}" 
+                   class="inline-flex items-center justify-center bg-gray-800 hover:bg-black text-white font-bold px-8 py-3 rounded-full transition-all shadow-md transform active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Kembali Ke Materi
+                </a>
+        </div>
     </form>
 
 </div>

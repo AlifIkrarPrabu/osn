@@ -16,7 +16,7 @@
 {{-- =========================== --}}
 <div class="flex">
 
-    {{-- =========================== --}}
+{{-- =========================== --}}
 {{-- SIDEBAR --}}
 {{-- =========================== --}}
 <aside id="sidebar"
@@ -46,7 +46,7 @@
             <span>📄</span> Materi
         </a>
 
-        <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
+        <!-- <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
             <span>📝</span> Assignments
         </a>
 
@@ -64,7 +64,7 @@
 
         <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
             <span>📢</span> Announcement
-        </a>
+        </a> -->
 
     </nav>
 </aside>
@@ -150,7 +150,7 @@
 
 
 
-                {{-- GRADES --}}
+                <!-- {{-- GRADES --}}
                 <div class="bg-white border rounded-lg p-4 shadow-sm">
                     <h2 class="text-xl font-semibold mb-3">Grades</h2>
 
@@ -159,7 +159,7 @@
 
                         <button class="mt-4 border px-4 py-1 rounded-lg">View More</button>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             {{-- ========= Right Column ========= --}}
@@ -213,7 +213,7 @@
 </div>
 
 
-                {{-- DISCUSSION --}}
+                <!-- {{-- DISCUSSION --}}
                 <div class="bg-white border rounded-lg p-4 shadow-sm">
                     <h2 class="text-xl font-semibold mb-3">Discussion</h2>
 
@@ -239,7 +239,7 @@
 
                         <button class="mt-2 border px-4 py-1 rounded-lg">View More</button>
                     </div>
-                </div>
+                </div> -->
 
             </div>
 

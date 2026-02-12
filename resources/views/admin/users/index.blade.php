@@ -52,12 +52,6 @@
                 $navItems = [
                     ['name' => 'Dashboard', 'icon' => 'dashboard', 'route' => route('admin.dashboard'), 'active' => false],
                     ['name' => 'Users', 'icon' => 'users', 'route' => route('admin.users.index'), 'active' => true],
-                    ['name' => 'Courses', 'icon' => 'courses', 'route' => '#', 'active' => false],
-                    ['name' => 'Reports', 'icon' => 'reports', 'route' => '#', 'active' => false],
-                    ['name' => 'Settings', 'icon' => 'settings', 'route' => '#', 'active' => false],
-                    ['name' => 'Notifications', 'icon' => 'bell', 'route' => '#', 'active' => false],
-                    ['name' => 'Integrations', 'icon' => 'link', 'route' => '#', 'active' => false],
-                    ['name' => 'Activity Logs', 'icon' => 'activity-logs', 'route' => '#', 'active' => false],
                 ];
             @endphp
 
@@ -87,7 +81,6 @@
                 <button id="mobile-menu-button" class="text-gray-500 focus:outline-none md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
-                <div class="text-2xl font-bold text-gray-800 hidden md:block">Admin Dashboard</div>
             </div>
             
         </header>

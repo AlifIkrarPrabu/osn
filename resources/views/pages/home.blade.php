@@ -14,14 +14,14 @@
                 Olimpiade Sains <br class="hidden sm:inline"> Nasional
             </h1>
             <p class="text-lg text-gray-700 mb-8 max-w-xl mx-auto lg:mx-0">
-                OSN adalah singkatan dari Olimpiade Sains Nasional, sebuah kompetisi sains tingkat nasional 
+                OSN adalah Olimpiade Sains Nasional, sebuah kompetisi sains tingkat nasional 
                 bagi siswa SD, SMP, dan SMA di Indonesia yang diselenggarakan oleh Pusat Prestasi Nasional 
                 (Puspresnas). OSN bertujuan untuk menjaring talenta sains unggul dari seluruh Indonesia untuk 
                 dikembangkan dan dipersiapkan mewakili Indonesia di olimpiade sains internasional. 
             </p>
             
             {{-- Tombol Aksi - Diubah menjadi pendaftaran/informasi resmi --}}
-            <a href="https://pusatprestasinasional.kemdikbud.go.id/osn/" target="_blank" 
+            <a href="https://www.pelatihanosn-soc.com/tentang/" target="_blank" 
                class="inline-block px-8 py-3 text-lg bg-pink-600 text-white font-bold rounded-xl shadow-lg 
                       hover:bg-pink-700 transition duration-300 transform hover:scale-105">
                 Cek Informasi Resmi OSN
