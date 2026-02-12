@@ -123,19 +123,27 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
 // =======================================================
 Route::middleware(['auth', 'role:siswa'])
     ->prefix('siswa')
-    ->name('siswa.')
+    ->name('siswa.') // Semua rute di bawah otomatis diawali 'siswa.'
     ->group(function () {
 
+        // Menghasilkan: siswa.dashboard (URL: /siswa/dashboard)
         Route::get('/dashboard', [SiswaDashboardController::class, 'index'])
             ->name('dashboard');
 
+        // Menghasilkan: siswa.materials.index (URL: /siswa/materials)
+        // Perhatikan: Gunakan SiswaMaterialController (bukan MaterialController milik guru)
+        Route::get('/materials', [SiswaMaterialController::class, 'index'])
+            ->name('materials.index');
+
+        // Menghasilkan: siswa.materials.show (URL: /siswa/materials/{material})
         Route::get('/materials/{material}', [SiswaMaterialController::class, 'show'])
             ->name('materials.show');
 
+        // Simpan Jawaban
         Route::post('/tasks/answer', [TaskAnswerController::class, 'store'])
             ->name('tasks.answer');
         
-        Route::post('/materials/{material}/answers',[AnswerController::class, 'store'])
+        Route::post('/materials/{material}/answers', [AnswerController::class, 'store'])
             ->name('answers.store');
 });
 

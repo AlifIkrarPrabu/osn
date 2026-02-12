@@ -55,4 +55,12 @@ class MaterialController extends Controller
         ]);
     }
 
+    public function index()
+    {
+        // Mengambil semua materi, biasanya diurutkan dari yang terbaru
+        $materials = Material::with('user')->latest()->get();
+
+        return view('siswa.materials.index', compact('materials'));
+    }
+    
 }

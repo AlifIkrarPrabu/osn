@@ -39,7 +39,7 @@
                 <span>📄</span> Materi
             </a>
 
-            <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
+            <!-- <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
                 <span>📝</span> Assignments
             </a>
 
@@ -57,7 +57,7 @@
 
             <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
                 <span>📢</span> Announcement
-            </a>
+            </a> -->
         </nav>
     </aside>
 

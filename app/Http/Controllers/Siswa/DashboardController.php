@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $materials = Material::latest()->get();
+        $materials = Material::latest()->paginate(3);
 
         return view('dashboard.siswa', compact('materials'));
     }

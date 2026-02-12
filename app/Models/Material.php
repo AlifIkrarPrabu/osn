@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Material extends Model
 {
@@ -21,5 +22,10 @@ class Material extends Model
     public function examSessions()
     {
         return $this->hasMany(ExamSession::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

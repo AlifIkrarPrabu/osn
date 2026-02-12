@@ -22,9 +22,12 @@
                border border-blue-500 bg-blue-50 text-blue-600 font-semibold">
                 🏠 Dashboard
             </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">📚 Classes</a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">📄 Materials</a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">📝 Assignments</a>
+            <a href="{{ route('siswa.materials.index') }}" 
+                class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->is('siswa/materials*') ? 'border border-blue-500 bg-blue-50 text-blue-600 font-semibold' : 'hover:bg-gray-100' }}">
+                📄 Materials
+            </a>
+            <!-- <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">📚 Classes</a>
+            <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">📝 Assignments</a> -->
         </nav>
     </aside>
 
@@ -56,13 +59,18 @@
                                 </div>
                                 <span class="text-blue-600 font-medium">Lihat Soal →</span>
                             </div>
-
                         </a>
                     @endforeach
                 </div>
+                <div class="flex justify-end mt-2">
+                    <a href="{{ route('siswa.materials.index') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out mr-3">
+                        View More
+                    </a>
+                </div>
             </div>
+            
 
-            {{-- UPCOMING ASSIGNMENTS --}}
+            <!-- {{-- UPCOMING ASSIGNMENTS --}}
             <div class="bg-white border rounded-lg p-4 shadow-sm">
                 <h2 class="text-xl font-semibold mb-3">Upcoming Assignments</h2>
                 <div class="border rounded-lg p-4 flex gap-3">
@@ -73,7 +81,7 @@
                     </div>
                     <button class="border px-4 py-1 rounded-lg">View More</button>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </div>
