@@ -1,20 +1,4 @@
----
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/pelati17/public_html/exam.learningosn-soc.com/
+    - export DEPLOYPATH=/home/pelati17/public_html/exam.learningosn-soc.com
     - /bin/cp -R * $DEPLOYPATH
-    - cd $DEPLOYPATH
-    # Jalankan installasi composer jika ada perubahan (opsional)
-    # - /usr/local/bin/composer install --no-dev
-    
-    # Jalankan Build Assets (Vite)
-    # Pastikan Node.js terinstall di hosting Anda
-    - npm install
-    - npm run build
-    
-    # Hapus file hot agar CSS tidak pecah
-    - /bin/rm -f public/hot
-    
-    # Bersihkan cache Laravel
-    - php artisan config:clear
-    - php artisan view:clear
