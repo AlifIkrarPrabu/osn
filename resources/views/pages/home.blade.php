@@ -11,7 +11,7 @@
         {{-- Kiri: Teks dan Deskripsi OSN --}}
         <div class="lg:w-1/2 text-center lg:text-left">
             <h1 class="text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
-                Olimpiade Sains <br class="hidden sm:inline"> Nasi
+                Olimpiade Sains <br class="hidden sm:inline"> Nasional
             </h1>
             <p class="text-lg text-gray-700 mb-8 max-w-xl mx-auto lg:mx-0">
                 OSN adalah Olimpiade Sains Nasional, sebuah kompetisi sains tingkat nasional 
