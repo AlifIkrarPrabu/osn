@@ -21,7 +21,7 @@
                     </p>
                     <div class="flex flex-wrap justify-center lg:justify-start gap-4">
                         <a href="{{ route('register') }}" class="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition transform hover:-translate-y-1">
-                            Mulai Belajar
+                            Mulai Belajar Yuk
                         </a>
                         <a href="www.pelatihanosn-soc.com" class="px-8 py-3 bg-gray-100 text-gray-700 font-bold rounded-lg hover:bg-gray-200 transition">
                             Info Lebih Lanjut
