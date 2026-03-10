@@ -41,7 +41,7 @@
 <div class="flex h-screen bg-gray-100 font-sans antialiased">
     
     <!-- Sidebar Navigasi -->
-    <div class="flex-shrink-0 w-64 bg-white border-r border-gray-200 shadow-xl transition-all duration-300 transform -translate-x-full md:translate-x-0 fixed inset-y-0 left-0 z-30 md:static md:block" id="sidebar">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 shadow-xl transition-transform duration-300 transform -translate-x-full md:relative md:translate-x-0">
         <div class="p-6 text-xl font-extrabold text-blue-600 border-b border-gray-200">
             Admin
         </div>
@@ -52,6 +52,7 @@
                 $navItems = [
                     ['name' => 'Dashboard', 'icon' => 'dashboard', 'route' => route('admin.dashboard'), 'active' => true],
                     ['name' => 'Users', 'icon' => 'users', 'route' => route('admin.users.index'), 'active' => false],
+                    ['name' => 'Course', 'icon' => 'courses', 'route' => route('admin.materials.index'), 'active' => false],
                 ];
             @endphp
 
@@ -69,7 +70,7 @@
                 </a>
             @endforeach
         </nav>
-    </div>
+    </aside>
     
     <!-- Konten Utama -->
     <div class="flex-1 flex flex-col overflow-hidden">

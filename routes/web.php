@@ -12,8 +12,6 @@ use App\Http\Controllers\Siswa\TaskAnswerController;
 use App\Http\Controllers\Siswa\AnswerController;
 use Illuminate\Support\Facades\Route;
 
-
-
 // =======================================================
 // ROOT ROUTE
 // =======================================================
@@ -41,81 +39,48 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
 
         // Dashboard Admin
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-            ->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         // User Management
-        Route::resource('users', UserController::class)->only([
-            'index', 'destroy'
+        Route::resource('users', UserController::class)->only(['index', 'destroy']);
+        Route::patch('users/{user}', [UserController::class, 'updateDetails'])->name('users.update_details');
+        Route::post('users', [UserController::class, 'store'])->name('users.store');
+
+        // MANAGEMENT MATERI UNTUK ADMIN
+        // Menggunakan parameter {id} agar sama dengan yang digunakan di Controller
+        Route::resource('materials', MaterialController::class)->parameters([
+            'materials' => 'id'
         ]);
-
-        // Custom update route
-        Route::patch('users/{user}', [UserController::class, 'updateDetails'])
-            ->name('users.update_details');
-
-        // CREATE USER
-        Route::post('users', [UserController::class, 'store'])
-            ->name('users.store');
-
-        Route::post('/admin/users/store', [UserController::class, 'store'])
-            ->name('admin.users.store');
     });
 
 // =======================================================
-// GURU DASHBOARD (DINAMIS + MATERI & TUGAS)
+// GURU DASHBOARD
 // =======================================================
-Route::middleware(['auth', 'role:guru'])->group(function () {
+Route::middleware(['auth', 'role:guru'])
+    ->prefix('guru') // Menambahkan prefix agar lebih rapi
+    ->name('guru.')
+    ->group(function () {
 
-    // DASHBOARD GURU
-    Route::get('/guru/dashboard', [GuruDashboardController::class, 'index'])
-        ->name('guru.dashboard');
+    // DASHBOARD & STUDENTS
+    Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/students', [GuruDashboardController::class, 'students'])->name('students');
 
-    // ✨ HALAMAN DAFTAR SISWA
-    Route::get('/guru/students', [GuruDashboardController::class, 'students'])
-        ->name('guru.students');
-
-    Route::get('/guru/materials/{id}/report', [MaterialController::class, 'report'])
-        ->name('guru.materials.report');
-
-    // ===================================================
-    // ✨ MATERI
-    // ===================================================
-    Route::get('/guru/materials', [MaterialController::class, 'index'])
-        ->name('guru.materials.index');
-
-    Route::get('/guru/materials/create', [MaterialController::class, 'create'])
-        ->name('guru.materials.create');
-
-    Route::post('/guru/materials', [MaterialController::class, 'store'])
-        ->name('guru.materials.store');
-
-    Route::get('/guru/materials/{id}', [MaterialController::class, 'show'])
-        ->name('guru.materials.show');
-
-    Route::get('/guru/materials/{id}/edit', [MaterialController::class, 'edit'])
-        ->name('guru.materials.edit');
-
-    Route::patch('/guru/materials/{id}', [MaterialController::class, 'update'])
-        ->name('guru.materials.update');
-
-    Route::delete('/guru/materials/{id}', [MaterialController::class, 'destroy'])
-        ->name('guru.materials.destroy');
-
-    // ===================================================
-    // ✨ TUGAS DALAM MATERI (Pilihan Ganda / Essay)
-    // ===================================================
-    Route::post('/guru/materials/{id}/tasks', [MaterialController::class, 'storeTask'])
-        ->name('guru.tasks.store');
-
-    // TASKS AJAX
+    // MATERI (Manual Routes)
+    Route::get('/materials', [MaterialController::class, 'index'])->name('materials.index');
+    Route::get('/materials/create', [MaterialController::class, 'create'])->name('materials.create');
+    Route::post('/materials', [MaterialController::class, 'store'])->name('materials.store');
+    Route::get('/materials/{id}', [MaterialController::class, 'show'])->name('materials.show');
+    Route::get('/materials/{id}/edit', [MaterialController::class, 'edit'])->name('materials.edit');
+    Route::patch('/materials/{id}', [MaterialController::class, 'update'])->name('materials.update');
+    Route::delete('/materials/{id}', [MaterialController::class, 'destroy'])->name('materials.destroy');
     
+    // REPORT
+    Route::get('/materials/{id}/report', [MaterialController::class, 'report'])->name('materials.report');
 
-    Route::put('/guru/tasks/{task}', [MaterialController::class, 'updateTask'])
-        ->name('guru.tasks.update');
-
-    Route::delete('/guru/tasks/{task}', [MaterialController::class, 'deleteTask'])
-        ->name('guru.tasks.delete');
-
+    // TUGAS DALAM MATERI
+    Route::post('/materials/{id}/tasks', [MaterialController::class, 'storeTask'])->name('tasks.store');
+    Route::put('/tasks/{task}', [MaterialController::class, 'updateTask'])->name('tasks.update');
+    Route::delete('/tasks/{task}', [MaterialController::class, 'deleteTask'])->name('tasks.delete');
 });
 
 // =======================================================
@@ -123,28 +88,16 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
 // =======================================================
 Route::middleware(['auth', 'role:siswa'])
     ->prefix('siswa')
-    ->name('siswa.') // Semua rute di bawah otomatis diawali 'siswa.'
+    ->name('siswa.') 
     ->group(function () {
 
-        // Menghasilkan: siswa.dashboard (URL: /siswa/dashboard)
-        Route::get('/dashboard', [SiswaDashboardController::class, 'index'])
-            ->name('dashboard');
+        Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/materials', [SiswaMaterialController::class, 'index'])->name('materials.index');
+        Route::get('/materials/{material}', [SiswaMaterialController::class, 'show'])->name('materials.show');
 
-        // Menghasilkan: siswa.materials.index (URL: /siswa/materials)
-        // Perhatikan: Gunakan SiswaMaterialController (bukan MaterialController milik guru)
-        Route::get('/materials', [SiswaMaterialController::class, 'index'])
-            ->name('materials.index');
-
-        // Menghasilkan: siswa.materials.show (URL: /siswa/materials/{material})
-        Route::get('/materials/{material}', [SiswaMaterialController::class, 'show'])
-            ->name('materials.show');
-
-        // Simpan Jawaban
-        Route::post('/tasks/answer', [TaskAnswerController::class, 'store'])
-            ->name('tasks.answer');
-        
-        Route::post('/materials/{material}/answers', [AnswerController::class, 'store'])
-            ->name('answers.store');
+        // Jawaban
+        Route::post('/tasks/answer', [TaskAnswerController::class, 'store'])->name('tasks.answer');
+        Route::post('/materials/{material}/answers', [AnswerController::class, 'store'])->name('answers.store');
 });
 
 require __DIR__.'/auth.php';

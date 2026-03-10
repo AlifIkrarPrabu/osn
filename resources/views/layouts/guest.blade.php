@@ -14,13 +14,18 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        {{-- MENGHILANGKAN max-w-md DAN GAYA CARD DEFAULT --}}
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            {{-- BLOK LOGO DIHAPUS DARI SINI --}}
-
-            {{-- Slot sekarang hanya menjadi wadah tanpa batasan lebar/gaya --}}
-            <div class="w-full mt-6">
+    <body class="font-sans text-gray-900 antialiased m-0 p-0">
+        {{-- 
+            PERBAIKAN:
+            1. Menghapus 'pt-6' dan 'bg-gray-100' agar tidak ada jarak dan warna abu-abu di atas.
+            2. Menggunakan 'w-full' dan 'min-h-screen' tanpa padding tambahan.
+        --}}
+        <div class="min-h-screen w-full">
+            {{-- 
+                PERBAIKAN:
+                Menghapus 'mt-6' agar $slot (konten register) benar-benar mulai dari koordinat 0 (paling atas).
+            --}}
+            <div class="w-full">
                 {{ $slot }}
             </div>
         </div>

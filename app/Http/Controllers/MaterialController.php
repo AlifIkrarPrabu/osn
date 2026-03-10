@@ -16,8 +16,12 @@ class MaterialController extends Controller
     // ================================
     public function index()
     {
-        $materials = Material::where('teacher_id', Auth::id())->get();
-
+        if (auth()->user()->role === 'admin') {
+            $materials = \App\Models\Material::with('user')->latest()->get();
+            return view('admin.materials.index', compact('materials'));
+        }
+        
+        $materials = \App\Models\Material::where('teacher_id', auth()->id())->latest()->get();
         return view('guru.materials.index', compact('materials'));
     }
 
@@ -34,14 +38,14 @@ class MaterialController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'nullable',
-            'duration' => 'required|integer|min:1', // ⬅️ VALIDASI WAKTU
+            'duration' => 'required|integer|min:1',
         ]);
 
         Material::create([
             'teacher_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
-            'duration' => $request->duration, // ⬅️ SIMPAN WAKTU UJIAN
+            'duration' => $request->duration,
         ]);
 
         return redirect()->route('guru.materials.index')
@@ -49,40 +53,72 @@ class MaterialController extends Controller
     }
 
     // ================================
-    // EDIT MATERIAL
+    // EDIT MATERIAL (MENAMPILKAN FORM/DATA)
+    // ================================
+    public function edit($id)
+    {
+        $material = Material::findOrFail($id);
+        
+        // Cek role user yang sedang login
+        if (auth()->user()->role === 'admin') {
+            return view('admin.materials.edit', compact('material'));
+        }
+
+        return view('guru.materials.edit', compact('material'));
+    }
+
+    // ================================
+    // UPDATE MATERIAL (PROSES SIMPAN)
     // ================================
     public function update(Request $request, $id)
     {
         $request->validate([
             'title' => 'required',
-            'description' => 'nullable'
+            'description' => 'nullable',
+            'duration' => 'required|integer|min:1'
         ]);
 
-        $material = Material::where('teacher_id', Auth::id())->findOrFail($id);
+        if (auth()->user()->role === 'admin') {
+            $material = Material::findOrFail($id);
+        } else {
+            $material = Material::where('teacher_id', Auth::id())->findOrFail($id);
+        }
 
         $material->update([
             'title' => $request->title,
             'description' => $request->description,
+            'duration' => $request->duration,
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Materi berhasil diperbarui'
-        ]);
+        // Jika request datang dari AJAX (Modal)
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Materi berhasil diperbarui',
+                'data'    => $material
+            ]);
+        }
+
+        // Jika request dari form biasa
+        $route = (auth()->user()->role === 'admin') ? 'admin.materials.index' : 'guru.materials.index';
+        return redirect()->route($route)->with('success', 'Materi berhasil diperbarui');
     }
-
-
 
     // ================================
     // HAPUS MATERIAL
     // ================================
     public function destroy($id)
     {
-        $material = Material::where('teacher_id', Auth::id())->findOrFail($id);
+        if (auth()->user()->role === 'admin') {
+            $material = Material::findOrFail($id);
+        } else {
+            $material = Material::where('teacher_id', Auth::id())->findOrFail($id);
+        }
+
         $material->delete();
 
-        return redirect()->route('guru.materials.index')
-            ->with('success', 'Materi berhasil dihapus');
+        $route = (auth()->user()->role === 'admin') ? 'admin.materials.index' : 'guru.materials.index';
+        return redirect()->route($route)->with('success', 'Materi berhasil dihapus');
     }
 
     // ================================
@@ -90,9 +126,13 @@ class MaterialController extends Controller
     // ================================
     public function show($id)
     {
-        $material = Material::with('tasks')
-            ->where('teacher_id', Auth::id())  // keamanan: hanya pemilik bisa akses
-            ->findOrFail($id);
+        if (auth()->user()->role === 'admin') {
+            $material = Material::with('tasks')->findOrFail($id);
+        } else {
+            $material = Material::with('tasks')
+                ->where('teacher_id', Auth::id())
+                ->findOrFail($id);
+        }
 
         return view('guru.materials.show', compact('material'));
     }
@@ -133,8 +173,7 @@ class MaterialController extends Controller
 
         $task = Task::findOrFail($taskId);
 
-        // keamanan → pastikan guru pemilik material
-        if ($task->material->teacher_id !== Auth::id()) {
+        if (auth()->user()->role !== 'admin' && $task->material->teacher_id !== Auth::id()) {
             abort(403);
         }
 
@@ -154,8 +193,6 @@ class MaterialController extends Controller
         ]);
     }
 
-
-
     // ================================
     // DELETE TASK (AJAX)
     // ================================
@@ -163,7 +200,7 @@ class MaterialController extends Controller
     {
         $task = Task::findOrFail($taskId);
 
-        if ($task->material->teacher_id !== Auth::id()) {
+        if (auth()->user()->role !== 'admin' && $task->material->teacher_id !== Auth::id()) {
             abort(403);
         }
 
@@ -175,11 +212,18 @@ class MaterialController extends Controller
         ]);
     }
 
+    // ================================
+    // REPORT
+    // ================================
     public function report($id)
     {
-        $material = Material::with('tasks')
-            ->where('teacher_id', Auth::id())
-            ->findOrFail($id);
+        if (auth()->user()->role === 'admin') {
+            $material = Material::with('tasks')->findOrFail($id);
+        } else {
+            $material = Material::with('tasks')
+                ->where('teacher_id', Auth::id())
+                ->findOrFail($id);
+        }
 
         $sessions = ExamSession::where('material_id', $id)
             ->where('is_finished', true)
@@ -199,15 +243,16 @@ class MaterialController extends Controller
                 if ($task->type === 'multiple_choice') {
                     $totalMultipleChoice++;
                     $answer = $studentAnswers->get($task->id);
-                    if ($answer && trim(strtoupper($answer->answer)) === trim(strtoupper($task->correct_answer))) {
-                        $correctCount++;
+                    if ($answer && trim(strtoupper($answer->answer ?? ''))) {
+                        if (trim(strtoupper($answer->answer)) === trim(strtoupper($task->correct_answer))) {
+                            $correctCount++;
+                        }
                     }
                 }
             }
 
             $score = $totalMultipleChoice > 0 ? ($correctCount / $totalMultipleChoice) * 100 : 0;
 
-            // --- HITUNG DURASI PENGERJAAN ---
             $startTime = $session->created_at;
             $endTime = $session->updated_at;
             $diffInSeconds = $startTime->diffInSeconds($endTime);
@@ -217,16 +262,15 @@ class MaterialController extends Controller
             $durationString = ($minutes > 0 ? $minutes . " menit " : "") . $seconds . " detik";
 
             return [
-                'student_name' => $session->student->name,
+                'student_name' => $session->student->name ?? 'Siswa',
                 'correct' => $correctCount,
                 'total_mc' => $totalMultipleChoice,
                 'score' => round($score, 1),
-                'finished_at' => $endTime, // Objek Carbon
+                'finished_at' => $endTime,
                 'duration' => $durationString,
             ];
         });
 
         return view('guru.materials.report', compact('material', 'reports'));
     }
-
 }

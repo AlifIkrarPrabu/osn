@@ -89,6 +89,9 @@
         <label class="block mb-2">Deskripsi</label>
         <textarea id="editDescription" class="w-full border p-2 rounded mb-4"></textarea>
 
+        <label class="block mb-2">Durasi (Menit)</label>
+        <input type="number" id="editDuration" class="w-full border p-2 rounded mb-4">
+
         <div class="flex justify-end gap-2">
             <button id="closeModal" class="px-4 py-2 bg-gray-300 rounded">Batal</button>
             <button id="saveEdit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
@@ -129,7 +132,8 @@
                         class="px-3 py-1 bg-yellow-500 text-white rounded-lg editBtn"
                         data-id="{{ $material->id }}"
                         data-title="{{ $material->title }}"
-                        data-description="{{ $material->description }}">
+                        data-description="{{ $material->description }}"
+                        data-duration="{{ $material->duration }}">
                         Edit
                     </button>
 
@@ -174,6 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("editId").value = this.dataset.id;
             document.getElementById("editTitle").value = this.dataset.title;
             document.getElementById("editDescription").value = this.dataset.description;
+            document.getElementById("editDuration").value = this.dataset.duration;
 
             modal.classList.remove("hidden");
             modal.classList.add("flex");
@@ -191,20 +196,49 @@ document.addEventListener("DOMContentLoaded", function () {
         const id = document.getElementById("editId").value;
         const title = document.getElementById("editTitle").value;
         const description = document.getElementById("editDescription").value;
+        const duration = document.getElementById("editDuration").value;
+        const saveBtn = this;
+
+        // Loading state
+        saveBtn.disabled = true;
+        saveBtn.innerText = "Menyimpan...";
 
         fetch(`/guru/materials/${id}`, {
-            method: "PATCH",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "application/json", // Penting agar Laravel tahu ini minta JSON
                 "X-CSRF-TOKEN": "{{ csrf_token() }}"
             },
-            body: JSON.stringify({ title, description })
+            body: JSON.stringify({ 
+                _method: 'PATCH', // Laravel akan membaca ini sebagai PATCH
+                title: title, 
+                description: description, 
+                duration: duration 
+            })
         })
-        .then(res => res.json())
+        
+        .then(async res => {
+            const data = await res.json();
+            if (!res.ok) {
+                // Jika error validasi (422) atau error lainnya
+                throw new Error(data.message || "Terjadi kesalahan pada server");
+            }
+            return data;
+        })
         .then(data => {
             if (data.success) {
-                location.reload();
+                // Tutup modal dan reload
+                location.reload(); 
             }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Gagal menyimpan: " + error.message);
+        })
+        .finally(() => {
+            saveBtn.disabled = false;
+            saveBtn.innerText = "Simpan";
         });
     });
 

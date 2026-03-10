@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Selamat Datang di LMS OSN SOC Indonesia'])
+@extends('layouts.app', ['title' => 'Exam SOC | Pelatihan OSN dan Kompetisi Sains SOC'])
 
 @section('content')
 <div class="bg-gray-50 font-sans text-gray-900">
