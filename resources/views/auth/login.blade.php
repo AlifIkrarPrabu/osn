@@ -1,6 +1,6 @@
 <x-guest-layout>
     <x-slot name="title">
-        Login
+        Sign in
     </x-slot>
 
     {{-- Wrapper Utama dengan Background Gradasi --}}
