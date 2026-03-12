@@ -17,6 +17,8 @@
 
             'activity-logs' => '<svg xmlns="http://www.w3.org/2000/svg" width="'.$size.'" height="'.$size.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12H7"/><path d="M17 16H7"/><path d="M17 14H7"/></svg>',
 
+            'check' => '<svg xmlns="http://www.w3.org/2000/svg" width="'.$size.'" height="'.$size.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+
             /* === FIX NEW ICONS HERE === */
 
             // NEW Student Icon (better & clean)
@@ -39,14 +41,9 @@
 @endphp
 
 <div class="flex h-screen bg-gray-100 font-sans antialiased">
-    
-    <!-- Sidebar Navigasi -->
+    <!-- Sidebar -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 shadow-xl transition-transform duration-300 transform -translate-x-full md:relative md:translate-x-0">
-        <div class="p-6 text-xl font-extrabold text-blue-600 border-b border-gray-200">
-            Admin
-        </div>
-        
-        <!-- Menu Sidebar -->
+        <div class="p-6 text-xl font-extrabold text-blue-600 border-b border-gray-200">Admin</div>
         <nav class="p-4 space-y-2">
             @php
                 $navItems = [
@@ -55,179 +52,111 @@
                     ['name' => 'Course', 'icon' => 'courses', 'route' => route('admin.materials.index'), 'active' => false],
                 ];
             @endphp
-
             @foreach ($navItems as $item)
-                <a href="{{ $item['route'] }}" 
-                    class="flex items-center p-3 rounded-xl transition duration-150 ease-in-out 
-                    @if($item['active']) 
-                        bg-blue-50 text-blue-700 font-semibold shadow-sm
-                    @else 
-                        text-gray-600 hover:bg-gray-100 hover:text-gray-900 
-                    @endif">
-                    
+                <a href="{{ $item['route'] }}" class="flex items-center p-3 rounded-xl transition @if($item['active']) bg-blue-50 text-blue-700 font-semibold shadow-sm @else text-gray-600 hover:bg-gray-100 @endif">
                     <span class="mr-3">{!! iconHtml($item['icon'], 20) !!}</span>
                     {{ $item['name'] }}
                 </a>
             @endforeach
         </nav>
     </aside>
-    
-    <!-- Konten Utama -->
-    <div class="flex-1 flex flex-col">
-        
-        <!-- Header Utama / Navbar Dashboard -->
-        <header class="flex items-center justify-between px-4 sm:px-6 py-4 bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-            <div class="flex items-center space-x-4">
-                {{-- Tombol Hamburger untuk Mobile --}}
-                <button id="mobile-menu-button" class="text-gray-500 focus:outline-none md:hidden">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
-            </div>
-            
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
+            <button id="mobile-menu-button" class="text-gray-500 md:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <div class="text-gray-700 font-medium">Panel Manajemen</div>
         </header>
-<div class="p-6 bg-white rounded-xl shadow-lg m-4 sm:m-6 relative z-10">
 
-    <h1 class="text-3xl font-extrabold text-gray-800 mb-6 border-b pb-2">Manajemen Pengguna</h1>
+        <main class="flex-1 overflow-x-hidden overflow-y-auto p-6">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h1 class="text-3xl font-extrabold text-gray-800 mb-6 border-b pb-2">Manajemen Pengguna</h1>
 
-    {{-- ALERT --}}
-    @if(session('success'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-md">
-            {{ session('success') }}
-        </div>
-    @endif
+                {{-- ALERT --}}
+                @if(session('success'))
+                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-md">
+                        {{ session('success') }}
+                    </div>
+                @endif
 
-    @if(session('error'))
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md">
-            {{ session('error') }}
-        </div>
-    @endif
+                <div class="flex flex-col md:flex-row justify-between gap-4 mb-6">
+                    <form method="GET" action="{{ route('admin.users.index') }}" class="flex-1 flex gap-2">
+                        <input type="text" name="search" placeholder="Cari nama atau email..." value="{{ $search ?? '' }}" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500" />
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Cari</button>
+                    </form>
+                    <button onclick="openAddUserModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
+                        Tambah User Baru
+                    </button>
+                </div>
 
+                <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No.</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pengguna</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Role</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @forelse ($users as $user)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-4 py-3 text-sm text-gray-500">
+                                            {{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="text-sm font-semibold text-gray-900">{{ $user->name }}</div>
+                                            <div class="text-xs text-gray-500">{{ $user->email }}</div>
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            <span class="px-2 py-1 text-xs font-bold rounded-full @if($user->role === 'admin') bg-purple-100 text-purple-700 @elseif($user->role === 'guru') bg-amber-100 text-amber-700 @else bg-blue-100 text-blue-700 @endif">
+                                                {{ strtoupper($user->role) }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            @if($user->is_approved)
+                                                <span class="px-2 py-1 text-xs font-bold rounded-full bg-green-100 text-green-700 italic">APPROVED</span>
+                                            @else
+                                                <span class="px-2 py-1 text-xs font-bold rounded-full bg-red-100 text-red-700 animate-pulse">PENDING</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3 text-center text-sm font-medium space-x-2 whitespace-nowrap">
+                                            @if(!$user->is_approved)
+                                                <form action="{{ route('admin.users.approve', $user->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="text-green-600 hover:text-green-900 font-bold border border-green-600 px-2 py-1 rounded hover:bg-green-50">Setujui</button>
+                                                </form>
+                                            @endif
 
-    {{-- 🔍 FORM PENCARIAN --}}
-    <form method="GET" action="{{ route('admin.users.index') }}" class="mb-4 flex gap-2">
-        <input
-            type="text"
-            name="search"
-            placeholder="Cari nama pengguna..."
-            value="{{ $search ?? '' }}"
-            class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500"
-        />
+                                            <button data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}" data-user-email="{{ $user->email }}" onclick="openEditModal(this)" class="text-blue-600 hover:underline">Edit</button>
+                                            
+                                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin menghapus user ini?');">
+                                                @csrf @method('DELETE')
+                                                <button class="text-red-600 hover:underline">Hapus</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-10 text-center text-gray-500 italic">Data tidak ditemukan.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-        <button type="submit"
-            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-            Cari
-        </button>
-
-        @if(!empty($search))
-            <a href="{{ route('admin.users.index') }}"
-                class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
-                Reset
-            </a>
-        @endif
-    </form>
-
-    <!-- Tombol Tambah User -->
-    <button onclick="openAddUserModal()" 
-    class="mb-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-    Tambah User
-    </button>
-
-
-
-{{-- TABEL USER --}}
-
-<div class="bg-white rounded-lg shadow overflow-hidden">
-
-    {{-- WRAPPER TABEL --}}
-    <div class="relative overflow-x-auto">
-
-        <table class="min-w-full divide-y divide-gray-200">
-
-            {{-- HEADER (STICKY) --}}
-            <thead class="bg-gray-50 sticky top-0 z-20">
-                <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No.</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Role</th>
-                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Aksi</th>
-                </tr>
-            </thead>
-
-        </table>
-
-        {{-- BODY SCROLL (MAKS 6 BARIS) --}}
-        <div class="overflow-y-auto max-h-[360px]">
-            <table class="min-w-full divide-y divide-gray-200">
-                <tbody class="bg-white">
-
-                    @forelse ($users as $user)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 text-sm text-gray-700 w-[60px]">
-                                {{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}
-                            </td>
-
-                            <td class="px-4 py-3 text-sm font-medium text-gray-900">
-                                {{ $user->name }}
-                            </td>
-
-                            <td class="px-4 py-3 text-sm text-center text-gray-500">
-                                {{ $user->email }}
-                            </td>
-
-                            <td class="px-4 py-3 text-center">
-                                <span class="px-2 inline-flex text-xs font-semibold rounded-full
-                                    @if($user->role === 'admin') bg-indigo-100 text-indigo-800
-                                    @elseif($user->role === 'guru') bg-yellow-100 text-yellow-800
-                                    @else bg-blue-100 text-blue-800 @endif">
-                                    {{ ucfirst($user->role) }}
-                                </span>
-                            </td>
-
-                            <td class="px-4 py-3 text-center text-sm whitespace-nowrap">
-                                <button
-                                    data-user-id="{{ $user->id }}"
-                                    data-user-name="{{ $user->name }}"
-                                    data-user-email="{{ $user->email }}"
-                                    onclick="openEditModal(this)"
-                                    class="text-indigo-600 hover:underline mr-3 font-semibold">
-                                    Edit User
-                                </button>
-
-                                <form action="{{ route('admin.users.destroy', $user->id) }}"
-                                      method="POST"
-                                      class="inline"
-                                      onsubmit="return confirm('Yakin menghapus pengguna {{ e($user->name) }}?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="text-red-600 hover:underline font-semibold">
-                                        Hapus User
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-4 py-4 text-center text-gray-500">
-                                Tidak ada data pengguna.
-                            </td>
-                        </tr>
-                    @endforelse
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    {{-- INFO & PAGINATION (SELALU DI BAWAH, TIDAK TERPOTONG) --}}
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-4 py-4 border-t bg-gray-50">
-        <div class="text-sm text-gray-600">
-            Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} results
-        </div>
-
-        <div>
-            {{ $users->appends(['search' => $search])->links() }}
-        </div>
+                <div class="mt-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-sm text-gray-600">Menampilkan {{ $users->firstItem() }} sampai {{ $users->lastItem() }} dari {{ $users->total() }} user.</p>
+                    {{ $users->appends(['search' => $search])->links() }}
+                </div>
+            </div>
+        </main>
     </div>
 </div>
 

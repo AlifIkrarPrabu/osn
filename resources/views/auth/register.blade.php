@@ -36,6 +36,16 @@
                 <form method="POST" action="{{ route('register') }}" class="space-y-4">
                     @csrf
 
+                    {{-- Pilihan Role --}}
+                    <div>
+                        <x-input-label for="role" value="Daftar Sebagai" class="text-gray-600 font-medium mb-1 text-xs uppercase" />
+                        <select name="role" id="role" class="block w-full border-gray-200 bg-gray-50 focus:border-blue-400 focus:ring-blue-400 rounded-xl shadow-sm py-3 px-4 outline-none">
+                            <option value="siswa" {{ old('role') == 'siswa' ? 'selected' : '' }}>Siswa</option>
+                            <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('role')" class="mt-1" />
+                    </div>
+
                     {{-- Name --}}
                     <div>
                         <x-input-label for="name" value="Nama Lengkap" class="text-gray-600 font-medium mb-1 text-xs uppercase tracking-wider" />

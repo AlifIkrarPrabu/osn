@@ -10,33 +10,22 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role', // Penting: pastikan kolom 'role' ada di tabel 'users'
+        'role',
+        'is_approved', // Tambahkan ini
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-
-    // Helper methods untuk pengecekan role
+    // Helper methods
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
@@ -51,16 +40,19 @@ class User extends Authenticatable
     {
         return $this->role === 'siswa';
     }
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+
+    // Helper untuk cek approval
+    public function isApproved(): bool
+    {
+        return (bool) $this->is_approved;
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_approved' => 'boolean',
         ];
     }
 }

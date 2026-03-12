@@ -23,6 +23,20 @@ class UserController extends Controller
         return view('admin.users.index', compact('users', 'search'));
     }
 
+    // Approved
+    public function approve(User $user)
+    {
+        $user->update(['is_approved' => true]);
+        return back()->with('status', "Akun {$user->name} berhasil disetujui.");
+    }
+
+    public function reject(User $user)
+    {
+        // Bisa hapus user atau ubah status lainnya
+        $user->delete();
+        return back()->with('status', "Pendaftaran user telah ditolak dan dihapus.");
+    }
+
     // CREATE USER
     public function store(Request $request)
     {

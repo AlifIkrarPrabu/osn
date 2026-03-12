@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 // Redirect dashboard sesuai role
 Route::get('/dashboard', [DashboardController::class, 'redirectBasedOnRole'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'approved'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -41,13 +41,16 @@ Route::middleware(['auth', 'role:admin'])
         // Dashboard Admin
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // User Management
-        Route::resource('users', UserController::class)->only(['index', 'destroy']);
-        Route::patch('users/{user}', [UserController::class, 'updateDetails'])->name('users.update_details');
-        Route::post('users', [UserController::class, 'store'])->name('users.store');
+        // User Management (Terpusat di UserController)
+        // Menangani index (tampilan daftar user), store, dan destroy
+        Route::resource('users', UserController::class)->only(['index', 'destroy', 'store']);
+        
+        // Fitur Tambahan User (Update detail, Approve, Reject)
+        Route::patch('users/{user}/update-details', [UserController::class, 'updateDetails'])->name('users.update_details');
+        Route::patch('users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
+        Route::delete('users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
 
-        // MANAGEMENT MATERI UNTUK ADMIN
-        // Menggunakan parameter {id} agar sama dengan yang digunakan di Controller
+        // Management Materi
         Route::resource('materials', MaterialController::class)->parameters([
             'materials' => 'id'
         ]);
@@ -56,16 +59,16 @@ Route::middleware(['auth', 'role:admin'])
 // =======================================================
 // GURU DASHBOARD
 // =======================================================
-Route::middleware(['auth', 'role:guru'])
-    ->prefix('guru') // Menambahkan prefix agar lebih rapi
+Route::middleware(['auth', 'role:guru', 'approved']) // Perbaikan: Approved masuk ke dalam array middleware
+    ->prefix('guru') 
     ->name('guru.')
     ->group(function () {
 
-    // DASHBOARD & STUDENTS
+    // Dashboard & Students
     Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
     Route::get('/students', [GuruDashboardController::class, 'students'])->name('students');
 
-    // MATERI (Manual Routes)
+    // Materi (Menggunakan Resource atau Manual)
     Route::get('/materials', [MaterialController::class, 'index'])->name('materials.index');
     Route::get('/materials/create', [MaterialController::class, 'create'])->name('materials.create');
     Route::post('/materials', [MaterialController::class, 'store'])->name('materials.store');
@@ -74,10 +77,10 @@ Route::middleware(['auth', 'role:guru'])
     Route::patch('/materials/{id}', [MaterialController::class, 'update'])->name('materials.update');
     Route::delete('/materials/{id}', [MaterialController::class, 'destroy'])->name('materials.destroy');
     
-    // REPORT
+    // Report
     Route::get('/materials/{id}/report', [MaterialController::class, 'report'])->name('materials.report');
 
-    // TUGAS DALAM MATERI
+    // Tugas Dalam Materi
     Route::post('/materials/{id}/tasks', [MaterialController::class, 'storeTask'])->name('tasks.store');
     Route::put('/tasks/{task}', [MaterialController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/tasks/{task}', [MaterialController::class, 'deleteTask'])->name('tasks.delete');
@@ -86,7 +89,7 @@ Route::middleware(['auth', 'role:guru'])
 // =======================================================
 // SISWA DASHBOARD
 // =======================================================
-Route::middleware(['auth', 'role:siswa'])
+Route::middleware(['auth', 'role:siswa', 'approved'])
     ->prefix('siswa')
     ->name('siswa.') 
     ->group(function () {
