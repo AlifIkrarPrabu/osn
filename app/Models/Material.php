@@ -28,4 +28,9 @@ class Material extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function classrooms(): BelongsToMany
+    {
+    return $this->belongsToMany(Classroom::class);
+    }
 }

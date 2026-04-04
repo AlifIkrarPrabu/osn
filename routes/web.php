@@ -6,8 +6,9 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\UserController; 
 use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\Siswa\DashboardController as SiswaDashboardController;
-use App\Http\Controllers\Siswa\MaterialController as SiswaMaterialController;
+use App\Http\Controllers\Siswa\MaterialControllerSiswa;
 use App\Http\Controllers\Siswa\TaskAnswerController;
 use App\Http\Controllers\Siswa\AnswerController;
 use Illuminate\Support\Facades\Route;
@@ -59,7 +60,7 @@ Route::middleware(['auth', 'role:admin'])
 // =======================================================
 // GURU DASHBOARD
 // =======================================================
-Route::middleware(['auth', 'role:guru', 'approved']) // Perbaikan: Approved masuk ke dalam array middleware
+Route::middleware(['auth', 'role:guru', 'approved'])
     ->prefix('guru') 
     ->name('guru.')
     ->group(function () {
@@ -84,6 +85,15 @@ Route::middleware(['auth', 'role:guru', 'approved']) // Perbaikan: Approved masu
     Route::post('/materials/{id}/tasks', [MaterialController::class, 'storeTask'])->name('tasks.store');
     Route::put('/tasks/{task}', [MaterialController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/tasks/{task}', [MaterialController::class, 'deleteTask'])->name('tasks.delete');
+
+    // Route Kelas
+    Route::get('/classes', [ClassroomController::class, 'index'])->name('classes.index');
+    Route::post('/classes', [ClassroomController::class, 'store'])->name('classes.store');
+    Route::delete('/classes/{id}', [ClassroomController::class, 'destroy'])->name('classes.destroy');
+
+    // Route Kelola Materi dalam Kelas
+    Route::get('/classes/{id}/manage', [ClassroomController::class, 'manageMaterials'])->name('classes.manage');
+    Route::post('/classes/{id}/manage', [ClassroomController::class, 'updateMaterials'])->name('classes.update_materials');
 });
 
 // =======================================================
