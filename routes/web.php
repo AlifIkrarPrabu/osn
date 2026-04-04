@@ -11,6 +11,7 @@ use App\Http\Controllers\Siswa\DashboardController as SiswaDashboardController;
 use App\Http\Controllers\Siswa\MaterialControllerSiswa;
 use App\Http\Controllers\Siswa\TaskAnswerController;
 use App\Http\Controllers\Siswa\AnswerController;
+use App\Http\Controllers\Guru\ClassController;
 use Illuminate\Support\Facades\Route;
 
 // =======================================================
@@ -94,6 +95,12 @@ Route::middleware(['auth', 'role:guru', 'approved'])
     // Route Kelola Materi dalam Kelas
     Route::get('/classes/{id}/manage', [ClassroomController::class, 'manageMaterials'])->name('classes.manage');
     Route::post('/classes/{id}/manage', [ClassroomController::class, 'updateMaterials'])->name('classes.update_materials');
+
+    // Route kelola siswa dalam kelas
+    Route::get('/classes', [ClassController::class, 'index'])->name('classes.index');
+    Route::get('/classes/{id}', [ClassController::class, 'show'])->name('classes.show');
+    Route::post('/classes/{id}/material', [ClassController::class, 'storeMaterial'])->name('classes.storeMaterial');
+    Route::post('/classes/{id}/student', [ClassController::class, 'addStudent'])->name('classes.addStudent');
 });
 
 // =======================================================

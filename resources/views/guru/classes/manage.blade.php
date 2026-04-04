@@ -23,7 +23,7 @@
                fixed lg:static inset-y-0 left-0 z-40 transform -translate-x-full 
                lg:translate-x-0 transition-transform duration-300">
 
-        <h1 class="text-xl font-bold mb-6">Logo</h1>
+        <h1 class="text-xl font-bold mb-6">SOC Indonesia</h1>
 
         {{-- MENU LIST --}}
         <nav class="space-y-2 mt-4">
