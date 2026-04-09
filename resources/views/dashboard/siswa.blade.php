@@ -22,15 +22,15 @@
                border border-blue-500 bg-blue-50 text-blue-600 font-semibold">
                 🏠 Dashboard
             </a>
-            <a href="{{ route('siswa.materials.index') }}" 
-                class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->is('siswa/materials*') ? 'border border-blue-500 bg-blue-50 text-blue-600 font-semibold' : 'hover:bg-gray-100' }}">
-                📄 Materials
-            </a>
-
             <a href="{{ route('siswa.classes.index') }}" 
                 class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->is('siswa/materials*') ? 'border border-blue-500 bg-blue-50 text-blue-600 font-semibold' : 'hover:bg-gray-100' }}">
                 🏫 Classes
             </a>
+            <a href="{{ route('siswa.materials.index') }}" 
+                class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->is('siswa/materials*') ? 'border border-blue-500 bg-blue-50 text-blue-600 font-semibold' : 'hover:bg-gray-100' }}">
+                📄 Materials
+            </a>
+            
         </nav>
     </aside>
 

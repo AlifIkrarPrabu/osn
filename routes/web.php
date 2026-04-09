@@ -113,8 +113,8 @@ Route::middleware(['auth', 'role:siswa', 'approved'])
     ->group(function () {
 
         Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/materials', [SiswaMaterialController::class, 'index'])->name('materials.index');
-        Route::get('/materials/{material}', [SiswaMaterialController::class, 'show'])->name('materials.show');
+        Route::get('/materials', [MaterialControllerSiswa::class, 'index'])->name('materials.index');
+        Route::get('/materials/{material}', [MaterialControllerSiswa::class, 'show'])->name('materials.show');
 
         // Jawaban
         Route::post('/tasks/answer', [TaskAnswerController::class, 'store'])->name('tasks.answer');
