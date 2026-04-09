@@ -27,6 +27,7 @@ class Classroom extends Model {
      * Menghubungkan Classroom ke User (sebagai siswa) melalui tabel 'classroom_student'.
      */
     public function students(): BelongsToMany {
-        return $this->belongsToMany(User::class, 'classroom_student', 'classroom_id', 'student_id');
+        return $this->belongsToMany(User::class, 'classroom_student', 'classroom_id', 'student_id')
+        ->withTimestamps();
     }
 }

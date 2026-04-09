@@ -55,4 +55,12 @@ class User extends Authenticatable
             'is_approved' => 'boolean',
         ];
     }
+
+    // Hubungan Many-to-Many ke Classroom (Siswa memiliki banyak kelas)
+    public function classrooms()
+    {
+        // Tambahkan ->withTimestamps() di akhir
+        return $this->belongsToMany(Classroom::class, 'classroom_student', 'student_id', 'classroom_id')
+                    ->withTimestamps();
+    }
 }
