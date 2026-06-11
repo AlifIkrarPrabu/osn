@@ -41,7 +41,7 @@
 <div class="flex h-screen bg-gray-100 font-sans antialiased">
     
     <!-- Sidebar Navigasi -->
-    <div class="flex-shrink-0 w-64 bg-white border-r border-gray-200 shadow-xl transition-all duration-300 transform -translate-x-full md:translate-x-0 fixed inset-y-0 left-0 z-30 md:static md:block" id="sidebar">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 shadow-xl transition-transform duration-300 transform -translate-x-full md:relative md:translate-x-0">
         <div class="p-6 text-xl font-extrabold text-blue-600 border-b border-gray-200">
             Admin
         </div>
@@ -52,12 +52,7 @@
                 $navItems = [
                     ['name' => 'Dashboard', 'icon' => 'dashboard', 'route' => route('admin.dashboard'), 'active' => true],
                     ['name' => 'Users', 'icon' => 'users', 'route' => route('admin.users.index'), 'active' => false],
-                    ['name' => 'Courses', 'icon' => 'courses', 'route' => '#', 'active' => false],
-                    ['name' => 'Reports', 'icon' => 'reports', 'route' => '#', 'active' => false],
-                    ['name' => 'Settings', 'icon' => 'settings', 'route' => '#', 'active' => false],
-                    ['name' => 'Notifications', 'icon' => 'bell', 'route' => '#', 'active' => false],
-                    ['name' => 'Integrations', 'icon' => 'link', 'route' => '#', 'active' => false],
-                    ['name' => 'Activity Logs', 'icon' => 'activity-logs', 'route' => '#', 'active' => false],
+                    ['name' => 'Course', 'icon' => 'courses', 'route' => route('admin.materials.index'), 'active' => false],
                 ];
             @endphp
 
@@ -75,7 +70,7 @@
                 </a>
             @endforeach
         </nav>
-    </div>
+    </aside>
     
     <!-- Konten Utama -->
     <div class="flex-1 flex flex-col overflow-hidden">
@@ -104,11 +99,9 @@
                     // Pastikan variabel $totalStudents dan $totalTeachers sudah tersedia dari Controller
                     $stats = [
                         // 1. Jumlah Siswa (MENGGUNAKAN VARIABEL DINAMIS)
-                        ['label' => 'Total Students', 'count' => $totalStudents, 'icon' => 'student-icon', 'color' => 'indigo'],
+                        ['label' => 'Total Students', 'count' => $totalStudents, 'icon' => 'student-icon', 'color' => 'blue'],
                         // 2. Jumlah Guru (MENGGUNAKAN VARIABEL DINAMIS)
-                        ['label' => 'Total Teachers', 'count' => $totalTeachers, 'icon' => 'teacher-icon', 'color' => 'teal'],
-                        ['label' => 'Active Users', 'count' => '5', 'icon' => 'desktop-icon', 'color' => 'blue'],
-                        ['label' => 'Active Courses', 'count' => '5', 'icon' => 'course-box-icon', 'color' => 'red'],
+                        ['label' => 'Total Teachers', 'count' => $totalTeachers, 'icon' => 'teacher-icon', 'color' => 'red'],
                     ];
                 @endphp
 
@@ -135,7 +128,7 @@
                 @endforeach
             </div>
             
-            <!-- 2. Konten Utama Dashboard (User Management, Course Management) -->
+            {{-- User Management --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 
                 {{-- Kiri: User Management (Telah Dimodifikasi untuk Data Dinamis) --}}
@@ -204,8 +197,8 @@
                     </div>
                 </div>
 
-                {{-- Kanan: Course Management --}}
-                <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+                {{-- Course Management --}}
+                <!-- <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
                     <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                         <span class="mr-2 text-teal-500">{!! iconHtml('courses') !!}</span>
                         Course Management
@@ -236,11 +229,11 @@
                     <div class="mt-4 flex justify-end">
                         <a href="#" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition duration-150">Kelola Kursus →</a>
                     </div>
-                </div>
+                </div> -->
             </div>
             
-            <!-- 3. Konten Baris Bawah (Activity Logs) -->
-            <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
+            {{-- Activity Logs --}}
+            <!-- <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
                 
                 {{-- Baris Penuh: Activity Logs --}}
                 <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
@@ -277,7 +270,7 @@
                         <a href="#" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition duration-150">Lihat Semua Log →</a>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </main>
     </div>

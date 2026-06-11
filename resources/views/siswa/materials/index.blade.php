@@ -1,0 +1,80 @@
+@extends('layouts.app', ['title' => 'Daftar Materi'])
+
+@section('content')
+<div class="lg:hidden p-4">
+    <button id="hamburgerBtn" class="p-2 border rounded-lg">☰</button>
+</div>
+
+<div class="flex">
+    {{-- SIDEBAR --}}
+@include('partials.sidebar-siswa')
+
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-40 hidden z-30 lg:hidden"></div>
+
+    {{-- MAIN CONTENT --}}
+    <div class="flex-1 p-6">
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-bold">{{ $title }}</h1>
+                <p class="text-gray-500">Pilih materi yang ingin Anda pelajari atau kerjakan.</p>
+            </div>
+            <a href="{{ route('siswa.classes.index') }}" class="text-blue-600 text-sm font-semibold hover:underline">← Kembali ke Kelas</a>
+        </div>
+
+        <div class="bg-white border rounded-lg shadow-sm">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="font-semibold text-lg">Daftar Materi</h2>
+                <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                    {{ $materials->count() }} Materi
+                </span>
+            </div>
+            
+            <div class="divide-y">
+                @forelse ($materials as $material)
+                    <div class="p-4 hover:bg-gray-50 transition flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xl">
+                                📄
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">{{ $material->title }}</h3>
+                                <p class="text-sm text-gray-500 line-clamp-1">{{ $material->description }}</p>
+                                <div class="flex gap-3 mt-2">
+                                    <span class="text-xs bg-gray-100 px-2 py-1 rounded">⏱ {{ $material->duration }} Menit</span>
+                                    <span class="text-xs bg-gray-100 px-2 py-1 rounded">📊 {{ $material->tasks->count() }} Soal</span>
+                                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Guru: {{ $material->user->name ?? 'Anonim' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{{ route('siswa.materials.show', $material->id) }}" 
+                           class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-center font-medium transition shadow-sm">
+                            Mulai Kerjakan
+                        </a>
+                    </div>
+                @empty
+                    <div class="p-12 text-center">
+                        <div class="text-4xl mb-3">📭</div>
+                        <p class="text-gray-500 italic">Belum ada materi yang tersedia di kelas ini.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const btn = document.getElementById('hamburgerBtn');
+
+    btn?.addEventListener('click', () => {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+    });
+
+    overlay?.addEventListener('click', () => {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    });
+</script>
+@endsection

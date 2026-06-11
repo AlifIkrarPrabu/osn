@@ -16,7 +16,7 @@
 {{-- =========================== --}}
 <div class="flex">
 
-    {{-- =========================== --}}
+{{-- =========================== --}}
 {{-- SIDEBAR --}}
 {{-- =========================== --}}
 <aside id="sidebar"
@@ -24,7 +24,7 @@
            fixed lg:static inset-y-0 left-0 z-40 transform -translate-x-full 
            lg:translate-x-0 transition-transform duration-300">
 
-    <h1 class="text-xl font-bold mb-6">Logo</h1>
+    <h1 class="text-xl font-bold mb-6">SOC Indonesia</h1>
 
     {{-- MENU LIST --}}
     <nav class="space-y-2 mt-4">
@@ -46,15 +46,15 @@
             <span>📄</span> Materi
         </a>
 
-        <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
-            <span>📝</span> Assignments
+        <a href="{{ route('guru.classes.index') }}" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
+            <span>📝</span> Classes
         </a>
 
-        <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
-            <span>🎓</span> Grades
+        <a href="{{ route('guru.assignments.index') }}" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
+            <span>📚</span> Assignments
         </a>
 
-        <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
+        <!-- <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
             <span>💬</span> Discussions
         </a>
 
@@ -64,7 +64,7 @@
 
         <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg">
             <span>📢</span> Announcement
-        </a>
+        </a> -->
 
     </nav>
 </aside>
@@ -150,7 +150,7 @@
 
 
 
-                {{-- GRADES --}}
+                <!-- {{-- GRADES --}}
                 <div class="bg-white border rounded-lg p-4 shadow-sm">
                     <h2 class="text-xl font-semibold mb-3">Grades</h2>
 
@@ -159,7 +159,7 @@
 
                         <button class="mt-4 border px-4 py-1 rounded-lg">View More</button>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             {{-- ========= Right Column ========= --}}
@@ -213,7 +213,7 @@
 </div>
 
 
-                {{-- DISCUSSION --}}
+                <!-- {{-- DISCUSSION --}}
                 <div class="bg-white border rounded-lg p-4 shadow-sm">
                     <h2 class="text-xl font-semibold mb-3">Discussion</h2>
 
@@ -239,7 +239,7 @@
 
                         <button class="mt-2 border px-4 py-1 rounded-lg">View More</button>
                     </div>
-                </div>
+                </div> -->
 
             </div>
 

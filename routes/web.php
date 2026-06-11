@@ -6,13 +6,16 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\UserController; 
 use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\Siswa\DashboardController as SiswaDashboardController;
-use App\Http\Controllers\Siswa\MaterialController as SiswaMaterialController;
+use App\Http\Controllers\Siswa\MaterialControllerSiswa;
 use App\Http\Controllers\Siswa\TaskAnswerController;
 use App\Http\Controllers\Siswa\AnswerController;
+use App\Http\Controllers\Siswa\SiswaClassController;
+use App\Http\Controllers\Guru\ClassController;
 use Illuminate\Support\Facades\Route;
-
-
+use App\Http\Controllers\Guru\AssignmentController;
+use App\Http\Controllers\Siswa\AssignmentSiswaController;
 
 // =======================================================
 // ROOT ROUTE
@@ -23,7 +26,7 @@ Route::get('/', function () {
 
 // Redirect dashboard sesuai role
 Route::get('/dashboard', [DashboardController::class, 'redirectBasedOnRole'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'approved'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -41,97 +44,94 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
 
         // Dashboard Admin
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-            ->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // User Management
-        Route::resource('users', UserController::class)->only([
-            'index', 'destroy'
+        // User Management (Terpusat di UserController)
+        // Menangani index (tampilan daftar user), store, dan destroy
+        Route::resource('users', UserController::class)->only(['index', 'destroy', 'store']);
+        
+        // Fitur Tambahan User (Update detail, Approve, Reject)
+        Route::patch('users/{user}/update-details', [UserController::class, 'updateDetails'])->name('users.update_details');
+        Route::patch('users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
+        Route::delete('users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
+
+        // Management Materi
+        Route::resource('materials', MaterialController::class)->parameters([
+            'materials' => 'id'
         ]);
-
-        // Custom update route
-        Route::patch('users/{user}', [UserController::class, 'updateDetails'])
-            ->name('users.update_details');
-
-        // CREATE USER
-        Route::post('users', [UserController::class, 'store'])
-            ->name('users.store');
-
-        Route::post('/admin/users/store', [UserController::class, 'store'])
-            ->name('admin.users.store');
     });
 
 // =======================================================
-// GURU DASHBOARD (DINAMIS + MATERI & TUGAS)
+// GURU DASHBOARD
 // =======================================================
-Route::middleware(['auth', 'role:guru'])->group(function () {
+Route::middleware(['auth', 'role:guru', 'approved'])
+    ->prefix('guru') 
+    ->name('guru.')
+    ->group(function () {
 
-    // DASHBOARD GURU
-    Route::get('/guru/dashboard', [GuruDashboardController::class, 'index'])
-        ->name('guru.dashboard');
+    // Dashboard & Students
+    Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/students', [GuruDashboardController::class, 'students'])->name('students');
 
-    // ✨ HALAMAN DAFTAR SISWA
-    Route::get('/guru/students', [GuruDashboardController::class, 'students'])
-        ->name('guru.students');
+    // Materi (Menggunakan Resource atau Manual)
+    Route::get('/materials', [MaterialController::class, 'index'])->name('materials.index');
+    Route::get('/materials/create', [MaterialController::class, 'create'])->name('materials.create');
+    Route::post('/materials', [MaterialController::class, 'store'])->name('materials.store');
+    Route::get('/materials/{id}', [MaterialController::class, 'show'])->name('materials.show');
+    Route::get('/materials/{id}/edit', [MaterialController::class, 'edit'])->name('materials.edit');
+    Route::patch('/materials/{id}', [MaterialController::class, 'update'])->name('materials.update');
+    Route::delete('/materials/{id}', [MaterialController::class, 'destroy'])->name('materials.destroy');
+    
+    // Report
+    Route::get('/materials/{id}/report', [MaterialController::class, 'report'])->name('materials.report');
 
-    // ===================================================
-    // ✨ MATERI
-    // ===================================================
-    Route::get('/guru/materials', [MaterialController::class, 'index'])
-        ->name('guru.materials.index');
+    // Tugas Dalam Materi
+    Route::post('/materials/{id}/tasks', [MaterialController::class, 'storeTask'])->name('tasks.store');
+    Route::put('/tasks/{task}', [MaterialController::class, 'updateTask'])->name('tasks.update');
+    Route::delete('/tasks/{task}', [MaterialController::class, 'deleteTask'])->name('tasks.delete');
 
-    Route::get('/guru/materials/create', [MaterialController::class, 'create'])
-        ->name('guru.materials.create');
+    // Route Kelas
+    Route::get('/classes', [ClassroomController::class, 'index'])->name('classes.index');
+    Route::post('/classes', [ClassroomController::class, 'store'])->name('classes.store');
+    Route::delete('/classes/{id}', [ClassroomController::class, 'destroy'])->name('classes.destroy');
 
-    Route::post('/guru/materials', [MaterialController::class, 'store'])
-        ->name('guru.materials.store');
+    // Route Kelola Materi dalam Kelas
+    Route::get('/classes/{id}/manage', [ClassroomController::class, 'manageMaterials'])->name('classes.manage');
+    Route::post('/classes/{id}/manage', [ClassroomController::class, 'updateMaterials'])->name('classes.update_materials');
 
-    Route::get('/guru/materials/{id}', [MaterialController::class, 'show'])
-        ->name('guru.materials.show');
+    // Route kelola siswa dalam kelas
+    Route::get('/classes', [ClassController::class, 'index'])->name('classes.index');
+    Route::get('/classes/{id}', [ClassController::class, 'show'])->name('classes.show');
+    Route::post('/classes/{id}/material', [ClassController::class, 'storeMaterial'])->name('classes.storeMaterial');
+    Route::post('/classes/{id}/student', [ClassController::class, 'addStudent'])->name('classes.addStudent');
 
-    Route::get('/guru/materials/{id}/edit', [MaterialController::class, 'edit'])
-        ->name('guru.materials.edit');
-
-    Route::patch('/guru/materials/{id}', [MaterialController::class, 'update'])
-        ->name('guru.materials.update');
-
-    Route::delete('/guru/materials/{id}', [MaterialController::class, 'destroy'])
-        ->name('guru.materials.destroy');
-
-    // ===================================================
-    // ✨ TUGAS DALAM MATERI (Pilihan Ganda / Essay)
-    // ===================================================
-    Route::post('/guru/materials/{id}/tasks', [MaterialController::class, 'storeTask'])
-        ->name('guru.tasks.store');
-
-    // TASKS AJAX
-    Route::post('/guru/materials/task/{taskId}/update', [MaterialController::class, 'updateTask'])
-        ->name('guru.tasks.update');
-
-    Route::delete('/guru/materials/task/{taskId}/delete', [MaterialController::class, 'deleteTask'])
-        ->name('guru.tasks.delete');
-
+    Route::resource('assignments', AssignmentController::class);
+    Route::post('submissions/{submission}/grade', [AssignmentController::class, 'grade'])->name('submissions.grade');
 });
 
 // =======================================================
 // SISWA DASHBOARD
 // =======================================================
-Route::middleware(['auth', 'role:siswa'])
+Route::middleware(['auth', 'role:siswa', 'approved'])
     ->prefix('siswa')
-    ->name('siswa.')
+    ->name('siswa.') 
     ->group(function () {
 
-        Route::get('/dashboard', [SiswaDashboardController::class, 'index'])
-            ->name('dashboard');
+        Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/materials', [MaterialControllerSiswa::class, 'index'])->name('materials.index');
+        Route::get('/materials/{material}', [MaterialControllerSiswa::class, 'show'])->name('materials.show');
 
-        Route::get('/materials/{material}', [SiswaMaterialController::class, 'show'])
-            ->name('materials.show');
+        // Jawaban
+        Route::post('/tasks/answer', [TaskAnswerController::class, 'store'])->name('tasks.answer');
+        Route::post('/materials/{material}/answers', [AnswerController::class, 'store'])->name('answers.store');
 
-        Route::post('/tasks/answer', [TaskAnswerController::class, 'store'])
-            ->name('tasks.answer');
-        
-        Route::post('/materials/{material}/answers',[AnswerController::class, 'store'])
-        ->name('answers.store');
-});
+        //Kelas Siswa
+        Route::get('/classes', [SiswaClassController::class, 'index'])->name('classes.index');
+
+        //Assignments Siswa
+        Route::get('/assignments', [AssignmentSiswaController::class, 'index'])->name('assignments.index');
+        Route::get('/assignments/{assignment}', [AssignmentSiswaController::class, 'show'])->name('assignments.show');
+        Route::post('/assignments/{assignment}/submit', [AssignmentSiswaController::class, 'store'])->name('assignments.submit');
+        });
 
 require __DIR__.'/auth.php';

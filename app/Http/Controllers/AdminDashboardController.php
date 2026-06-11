@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User; 
-use App\Models\Course; 
+use App\Models\Material; 
 
 class AdminDashboardController extends Controller
 {
     /**
-     * Menampilkan dashboard admin dengan semua statistik yang diperlukan.
+     * Menampilkan dashboard admin dengan statistik yang sesuai dengan tabel database yang ada.
      */
     public function index()
     {
@@ -22,45 +22,38 @@ class AdminDashboardController extends Controller
             // Menghitung total guru (role 'guru')
             $totalTeachers = User::where('role', 'guru')->count();
 
-            // Menghitung total pengguna aktif (Asumsi: semua yang bukan 'admin')
-            // Berdasarkan query Anda, ini bisa jadi 'users' secara keseluruhan,
-            // atau hanya 'siswa' + 'guru'. Saya akan menggunakan semua pengguna - admin
+            // Menghitung total pengguna selain admin
             $activeUsers = User::where('role', '!=', 'admin')->count();
 
-            // Menghitung total Course/Mata Pelajaran (Asumsi: semua course aktif)
-            $totalCourses = Course::count();
+            /** * PERBAIKAN DI SINI:
+             * Karena error mengatakan tabel 'courses' tidak ada, kita gunakan model 'Material'.
+             * Jika Anda belum punya model Material, pastikan membuatnya dengan: php artisan make:model Material
+             */
+            $totalMaterials = Material::count(); 
             
             // --- 2. Data untuk Tabel/List Terbaru ---
             
-            // Mengambil 4 pengguna terbaru untuk 'User Management'
-            // Gunakan $users untuk kompatibilitas dengan view yang error
-            $users = User::latest()->limit(4)->get(); 
-            $recentUsers = $users; // Alias jika Anda ingin nama yang lebih spesifik
+            // Mengambil 4 pengguna terbaru
+            $users = User::where('role', '!=', 'admin')->latest()->limit(4)->get(); 
+            $recentUsers = $users; 
 
-            // Mengambil 4 course terbaru untuk 'Course Management'
-            $recentCourses = Course::latest()->limit(4)->get();
+            // Mengambil 4 materi terbaru sebagai pengganti course
+            $recentMaterials = Material::latest()->limit(4)->get();
             
             
             // --- 3. Mengirim Data ke View ---
 
-            // Menggunakan compact() untuk mengirim semua variabel ke view
             return view('dashboard.admin', compact(
                 'totalStudents',
                 'totalTeachers',
-                'activeUsers', // Jika Anda menggunakan Active Users
-                'totalCourses',
-                'users',         // <--- INI PERBAIKAN UTAMA untuk menghilangkan error "Undefined variable $users"
-                'recentUsers',   // Tetap disertakan jika Anda menggunakannya
-                'recentCourses'
+                'activeUsers',
+                'totalMaterials', // Nama variabel disesuaikan
+                'users',
+                'recentUsers',
+                'recentMaterials'
             ));
 
         } catch (\Exception $e) {
-            // Opsional: Log error untuk debugging lebih lanjut
-            // Log::error("Error loading admin dashboard: " . $e->getMessage()); 
-            
-            // Jika ada error (misalnya koneksi DB atau model tidak ditemukan), 
-            // Anda bisa mengarahkan ke halaman error atau kembali dengan pesan
-            // Untuk sementara, kita throw error agar Anda bisa melihat masalahnya.
             throw $e;
         }
     }
