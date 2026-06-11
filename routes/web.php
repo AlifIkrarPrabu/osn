@@ -16,6 +16,10 @@ use App\Http\Controllers\Guru\ClassController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Guru\AssignmentController;
 use App\Http\Controllers\Siswa\AssignmentSiswaController;
+use App\Http\Controllers\Siswa\GradeSiswaController;
+use App\Http\Controllers\Guru\GradeGuruController;
+use App\Http\Controllers\Guru\DiscussionGuruController;
+use App\Http\Controllers\Siswa\DiscussionSiswaController;
 
 // =======================================================
 // ROOT ROUTE
@@ -62,7 +66,7 @@ Route::middleware(['auth', 'role:admin'])
     });
 
 // =======================================================
-// GURU DASHBOARD
+// GURU
 // =======================================================
 Route::middleware(['auth', 'role:guru', 'approved'])
     ->prefix('guru') 
@@ -105,12 +109,23 @@ Route::middleware(['auth', 'role:guru', 'approved'])
     Route::post('/classes/{id}/material', [ClassController::class, 'storeMaterial'])->name('classes.storeMaterial');
     Route::post('/classes/{id}/student', [ClassController::class, 'addStudent'])->name('classes.addStudent');
 
+    //Assignments Guru
     Route::resource('assignments', AssignmentController::class);
     Route::post('submissions/{submission}/grade', [AssignmentController::class, 'grade'])->name('submissions.grade');
+
+    //Grades Guru
+    Route::get('/grades', [GradeGuruController::class, 'index'])->name('grades.index');
+
+    //Discussions Guru
+    Route::get('/discussions', [DiscussionGuruController::class, 'index'])->name('discussions.index');
+    Route::post('/discussions/topic', [DiscussionGuruController::class, 'storeTopic'])->name('discussions.store_topic');
+    Route::get('/discussions/{id}', [DiscussionGuruController::class, 'show'])->name('discussions.show');
+    Route::post('/discussions/{id}/reply', [DiscussionGuruController::class, 'storeReply'])->name('discussions.store_reply');
+    Route::delete('/discussions/{id}', [DiscussionGuruController::class, 'destroyTopic'])->name('discussions.destroy_topic');
 });
 
 // =======================================================
-// SISWA DASHBOARD
+// SISWA
 // =======================================================
 Route::middleware(['auth', 'role:siswa', 'approved'])
     ->prefix('siswa')
@@ -132,6 +147,15 @@ Route::middleware(['auth', 'role:siswa', 'approved'])
         Route::get('/assignments', [AssignmentSiswaController::class, 'index'])->name('assignments.index');
         Route::get('/assignments/{assignment}', [AssignmentSiswaController::class, 'show'])->name('assignments.show');
         Route::post('/assignments/{assignment}/submit', [AssignmentSiswaController::class, 'store'])->name('assignments.submit');
+
+        //Grades Siswa
+        Route::get('/grades', [GradeSiswaController::class, 'index'])->name('grades.index');
+
+        //Discussions Siswa
+        Route::get('/discussions', [DiscussionSiswaController::class, 'index'])->name('discussions.index');
+        Route::post('/discussions/topic', [DiscussionSiswaController::class, 'storeTopic'])->name('discussions.store_topic');
+        Route::get('/discussions/{id}', [DiscussionSiswaController::class, 'show'])->name('discussions.show');
+        Route::post('/discussions/{id}/reply', [DiscussionSiswaController::class, 'storeReply'])->name('discussions.store_reply');
         });
 
 require __DIR__.'/auth.php';

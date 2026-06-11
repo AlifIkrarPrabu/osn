@@ -4,7 +4,7 @@
     fixed lg:static inset-y-0 left-0 z-40 transform -translate-x-full 
     lg:translate-x-0 transition-transform duration-300">
 
-    <h1 class="text-xl font-bold mb-6">Logo</h1>
+    <h1 class="text-xl font-bold mb-6">SOC Indonesia</h1>
 
     <nav class="space-y-2">
         <a href="{{ url('/siswa/dashboard') }}"
@@ -22,6 +22,15 @@
         <a href="{{ route('siswa.assignments.index') }}" 
            class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->is('siswa/assignments*') ? 'border border-blue-500 bg-blue-50 text-blue-600 font-semibold' : 'hover:bg-gray-100' }}">
             📝 Assignments
+        </a>
+        <a href="{{ route('siswa.grades.index') }}" 
+            class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->is('siswa/grades*') ? 'border border-blue-500 bg-blue-50 text-blue-600 font-semibold' : 'hover:bg-gray-100' }}">
+                📊 Grades
+        </a>
+
+        <a href="{{ route('siswa.discussions.index') }}" 
+            class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->is('siswa/discussions*') ? 'border border-blue-500 bg-blue-50 text-blue-600 font-semibold' : 'hover:bg-gray-100' }}">
+                <span>💬</span> Discussions
         </a>
     </nav>
 </aside>
