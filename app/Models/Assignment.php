@@ -25,7 +25,10 @@ class Assignment extends Model {
         return $this->hasMany(Submission::class);
     }
 
-    public function questions() {
-    return $this->hasMany(AssignmentQuestion::class);
+    /**
+     * Hubungan ke Soal Tugas
+     */
+    public function questions(): HasMany {
+        return $this->hasMany(AssignmentQuestion::class);
     }
 }

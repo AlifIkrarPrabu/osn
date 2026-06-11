@@ -1,6 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
+{{-- =========================== --}}
+{{-- HAMBURGER (MOBILE ONLY) --}}
+{{-- =========================== --}}
+<div class="lg:hidden p-4">
+    <button id="hamburgerBtn" class="p-2 border rounded-lg">
+        ☰
+    </button>
+</div>
+
+{{-- =========================== --}}
+{{-- WRAPPER --}}
+{{-- =========================== --}}
+<div class="flex">
+
+    {{-- =========================== --}}
+    {{-- SIDEBAR --}}
+    {{-- =========================== --}}
+   @include('partials.sidebar-guru')
+
+    {{-- =========================== --}}
+    {{-- OVERLAY (MOBILE ONLY) --}}
+    {{-- =========================== --}}
+    <div id="overlay"
+        class="fixed inset-0 bg-black bg-opacity-40 hidden z-30 lg:hidden">
+    </div>
 <div class="p-6 bg-gray-50 min-h-screen">
     <div class="max-w-6xl mx-auto">
         <!-- Header -->

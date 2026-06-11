@@ -73,4 +73,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Classroom::class, 'classroom_student', 'student_id', 'classroom_id')
                     ->withTimestamps();
     }
+    /**
+     * Hubungan ke Diskusi
+     */
+    public function discussionTopics(): HasMany
+    {
+        return $this->hasMany(DiscussionTopic::class);
+    }
+
+    public function discussionReplies(): HasMany
+    {
+        return $this->hasMany(DiscussionReply::class);
+    }
 }
