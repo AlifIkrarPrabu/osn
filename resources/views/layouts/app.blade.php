@@ -7,26 +7,56 @@
 
     <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts: Menggunakan Plus Jakarta Sans agar lebih premium seperti desain sebelumnya -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- 1. VITE (Utama) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- 2. TAILWIND CDN FALLBACK (Penting: Menjamin tampilan di hosting tetap muncul meski Vite error) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui'],
+                    },
+                    colors: {
+                        osnBlue: '#1e4fa1',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar agar lebih cantik */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #1e4fa1; border-radius: 10px; }
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
 </head>
 
-<body class="font-sans antialiased bg-gray-100">
+<body class="font-sans antialiased bg-gray-50 text-gray-900">
 
-    {{-- WRAPPER UTAMA (KUNCI) --}}
+    {{-- WRAPPER UTAMA --}}
     <div class="min-h-screen flex flex-col">
 
         {{-- HEADER --}}
         @include('layouts.header')
 
         {{-- MAIN CONTENT --}}
-        <main class="flex-1 overflow-hidden">
+        {{-- Hapus 'overflow-hidden' agar scroll normal di halaman panjang --}}
+        <main class="flex-1">
             @yield('content')
         </main>
 
-        {{-- FOOTER (TIDAK AKAN PERNAH KETUTUP) --}}
+        {{-- FOOTER --}}
         @include('layouts.footer')
 
     </div>

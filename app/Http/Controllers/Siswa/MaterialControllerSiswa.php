@@ -4,13 +4,38 @@ namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Material;
+use App\Models\Classroom;
 use App\Models\ExamSession;
 use App\Models\StudentAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class MaterialController extends Controller
+class MaterialControllerSiswa extends Controller
 {
+    public function index(Request $request)
+    {
+        $classId = $request->query('class_id');
+        
+        if ($classId) {
+            // Ambil materi hanya untuk kelas tertentu
+            $classroom = Classroom::findOrFail($classId);
+            $materials = $classroom->materials()->with('user')->latest()->get();
+            $title = "Materi Kelas: " . $classroom->name;
+        } else {
+            // Jika tidak ada parameter, ambil materi dari semua kelas yang diikuti siswa
+            $user = Auth::user();
+            $classIds = $user->classrooms->pluck('id');
+            
+            $materials = Material::whereHas('classrooms', function($q) use ($classIds) {
+                $q->whereIn('classrooms.id', $classIds);
+            })->with('user')->latest()->get();
+            
+            $title = "Semua Materi Saya";
+        }
+
+        return view('siswa.materials.index', compact('materials', 'title'));
+    }
+
     public function show(Material $material)
     {
         $studentId = Auth::id();
@@ -30,10 +55,7 @@ class MaterialController extends Controller
         $durationSeconds = $material->duration * 60;
         $elapsedSeconds = now()->diffInSeconds($session->started_at);
 
-        $remainingSeconds = max(
-            0,
-            $durationSeconds - $elapsedSeconds
-        );
+        $remainingSeconds = max(0, $durationSeconds - $elapsedSeconds);
 
         if ($remainingSeconds === 0 && !$session->is_finished) {
             $session->update([
@@ -54,13 +76,4 @@ class MaterialController extends Controller
             'answers' => $existingAnswers,
         ]);
     }
-
-    public function index()
-    {
-        // Mengambil semua materi, biasanya diurutkan dari yang terbaru
-        $materials = Material::with('user')->latest()->get();
-
-        return view('siswa.materials.index', compact('materials'));
-    }
-    
 }
