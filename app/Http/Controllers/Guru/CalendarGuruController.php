@@ -74,8 +74,8 @@ class CalendarGuruController extends Controller
         return redirect()->back()->with('success', 'Agenda kelas baru berhasil dijadwalkan!');
     }
 
-    // Menghapus agenda kelas manual
-    public function destroyEvent($id)
+    // MENAMBAHKAN TIPE DATA string|int PADA PARAMETER $id
+    public function destroyEvent(string|int $id)
     {
         $agenda = ClassEvent::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $agenda->delete();

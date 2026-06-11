@@ -50,15 +50,15 @@ class DiscussionGuruController extends Controller
         return redirect()->back()->with('success', 'Topik diskusi baru berhasil diterbitkan!');
     }
 
-    // Melihat detail sebuah topik beserta seluruh komentar di dalamnya
-    public function show($id)
+    // MENAMBAHKAN TIPE DATA string|int PADA PARAMETER $id
+    public function show(string|int $id)
     {
         $topic = DiscussionTopic::with(['user', 'classroom', 'replies.user'])->findOrFail($id);
         return view('guru.discussions.show', compact('topic'));
     }
 
-    // Menyimpan balasan komentar dari Guru
-    public function storeReply(Request $request, $topicId)
+    // MENAMBAHKAN TIPE DATA string|int PADA PARAMETER $topicId
+    public function storeReply(Request $request, string|int $topicId)
     {
         $request->validate([
             'content' => 'required|string',
@@ -73,8 +73,8 @@ class DiscussionGuruController extends Controller
         return redirect()->back()->with('success', 'Komentar berhasil dikirim!');
     }
 
-    // Menghapus topik diskusi (Fitur Moderasi Guru)
-    public function destroyTopic($id)
+    // MENAMBAHKAN TIPE DATA string|int PADA PARAMETER $id
+    public function destroyTopic(string|int $id)
     {
         $topic = DiscussionTopic::findOrFail($id);
         $topic->delete();

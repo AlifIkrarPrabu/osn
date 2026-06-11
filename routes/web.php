@@ -22,6 +22,8 @@ use App\Http\Controllers\Guru\DiscussionGuruController;
 use App\Http\Controllers\Siswa\DiscussionSiswaController;
 use App\Http\Controllers\Guru\CalendarGuruController;
 use App\Http\Controllers\Siswa\CalendarSiswaController;
+use App\Http\Controllers\Guru\AnnouncementGuruController;
+use App\Http\Controllers\Siswa\AnnouncementSiswaController;
 
 // =======================================================
 // ROOT ROUTE
@@ -130,6 +132,11 @@ Route::middleware(['auth', 'role:guru', 'approved'])
     Route::get('/calendar/events', [CalendarGuruController::class, 'getEvents'])->name('calendar.events');
     Route::post('/calendar/event', [CalendarGuruController::class, 'storeEvent'])->name('calendar.store_event');
     Route::delete('/calendar/event/{id}', [CalendarGuruController::class, 'destroyEvent'])->name('calendar.destroy_event');
+
+    //Announcement Guru
+    Route::get('/announcements', [AnnouncementGuruController::class, 'index'])->name('announcements.index');
+    Route::post('/announcements', [AnnouncementGuruController::class, 'store'])->name('announcements.store');
+    Route::delete('/announcements/{id}', [AnnouncementGuruController::class, 'destroy'])->name('announcements.destroy');
 });
 
 // =======================================================
@@ -168,6 +175,9 @@ Route::middleware(['auth', 'role:siswa', 'approved'])
         //Calendar Siswa
         Route::get('/calendar', [CalendarSiswaController::class, 'index'])->name('calendar.index');
         Route::get('/calendar/events', [CalendarSiswaController::class, 'getEvents'])->name('calendar.events');
+
+        //Announcement Siswa
+        Route::get('/announcements', [AnnouncementSiswaController::class, 'index'])->name('announcements.index');
         });
 
 require __DIR__.'/auth.php';
