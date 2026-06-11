@@ -20,6 +20,8 @@ use App\Http\Controllers\Siswa\GradeSiswaController;
 use App\Http\Controllers\Guru\GradeGuruController;
 use App\Http\Controllers\Guru\DiscussionGuruController;
 use App\Http\Controllers\Siswa\DiscussionSiswaController;
+use App\Http\Controllers\Guru\CalendarGuruController;
+use App\Http\Controllers\Siswa\CalendarSiswaController;
 
 // =======================================================
 // ROOT ROUTE
@@ -122,6 +124,12 @@ Route::middleware(['auth', 'role:guru', 'approved'])
     Route::get('/discussions/{id}', [DiscussionGuruController::class, 'show'])->name('discussions.show');
     Route::post('/discussions/{id}/reply', [DiscussionGuruController::class, 'storeReply'])->name('discussions.store_reply');
     Route::delete('/discussions/{id}', [DiscussionGuruController::class, 'destroyTopic'])->name('discussions.destroy_topic');
+
+    //Calendar Guru
+    Route::get('/calendar', [CalendarGuruController::class, 'index'])->name('calendar.index');
+    Route::get('/calendar/events', [CalendarGuruController::class, 'getEvents'])->name('calendar.events');
+    Route::post('/calendar/event', [CalendarGuruController::class, 'storeEvent'])->name('calendar.store_event');
+    Route::delete('/calendar/event/{id}', [CalendarGuruController::class, 'destroyEvent'])->name('calendar.destroy_event');
 });
 
 // =======================================================
@@ -156,6 +164,10 @@ Route::middleware(['auth', 'role:siswa', 'approved'])
         Route::post('/discussions/topic', [DiscussionSiswaController::class, 'storeTopic'])->name('discussions.store_topic');
         Route::get('/discussions/{id}', [DiscussionSiswaController::class, 'show'])->name('discussions.show');
         Route::post('/discussions/{id}/reply', [DiscussionSiswaController::class, 'storeReply'])->name('discussions.store_reply');
+
+        //Calendar Siswa
+        Route::get('/calendar', [CalendarSiswaController::class, 'index'])->name('calendar.index');
+        Route::get('/calendar/events', [CalendarSiswaController::class, 'getEvents'])->name('calendar.events');
         });
 
 require __DIR__.'/auth.php';
