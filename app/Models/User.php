@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany; // Tambahkan ini
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -17,7 +19,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'is_approved', // Tambahkan ini
+        'is_approved',
     ];
 
     protected $hidden = [
@@ -56,10 +58,18 @@ class User extends Authenticatable
         ];
     }
 
-    // Hubungan Many-to-Many ke Classroom (Siswa memiliki banyak kelas)
-    public function classrooms()
+    /**
+     * Hubungan ke Jawaban Tugas (Submissions)
+     * Baru: Agar Guru bisa memantau jawaban siswa
+     */
+    public function submissions(): HasMany
     {
-        // Tambahkan ->withTimestamps() di akhir
+        return $this->hasMany(Submission::class, 'student_id');
+    }
+
+    // Hubungan Many-to-Many ke Classroom (Siswa memiliki banyak kelas)
+    public function classrooms(): BelongsToMany
+    {
         return $this->belongsToMany(Classroom::class, 'classroom_student', 'student_id', 'classroom_id')
                     ->withTimestamps();
     }

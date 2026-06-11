@@ -14,6 +14,8 @@ use App\Http\Controllers\Siswa\AnswerController;
 use App\Http\Controllers\Siswa\SiswaClassController;
 use App\Http\Controllers\Guru\ClassController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Guru\AssignmentController;
+use App\Http\Controllers\Siswa\AssignmentSiswaController;
 
 // =======================================================
 // ROOT ROUTE
@@ -102,6 +104,9 @@ Route::middleware(['auth', 'role:guru', 'approved'])
     Route::get('/classes/{id}', [ClassController::class, 'show'])->name('classes.show');
     Route::post('/classes/{id}/material', [ClassController::class, 'storeMaterial'])->name('classes.storeMaterial');
     Route::post('/classes/{id}/student', [ClassController::class, 'addStudent'])->name('classes.addStudent');
+
+    Route::resource('assignments', AssignmentController::class);
+    Route::post('submissions/{submission}/grade', [AssignmentController::class, 'grade'])->name('submissions.grade');
 });
 
 // =======================================================
@@ -122,6 +127,11 @@ Route::middleware(['auth', 'role:siswa', 'approved'])
 
         //Kelas Siswa
         Route::get('/classes', [SiswaClassController::class, 'index'])->name('classes.index');
-});
+
+        //Assignments Siswa
+        Route::get('/assignments', [AssignmentSiswaController::class, 'index'])->name('assignments.index');
+        Route::get('/assignments/{assignment}', [AssignmentSiswaController::class, 'show'])->name('assignments.show');
+        Route::post('/assignments/{assignment}/submit', [AssignmentSiswaController::class, 'store'])->name('assignments.submit');
+        });
 
 require __DIR__.'/auth.php';
