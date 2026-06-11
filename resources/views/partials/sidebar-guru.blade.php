@@ -55,5 +55,10 @@
                 <span>📅</span> Calendar
         </a>
 
+        <a href="{{ route('guru.announcements.index') }}" 
+            class="flex items-center gap-2 px-3 py-2 rounded-lg {{ request()->is('guru/announcements*') ? 'border border-blue-500 bg-blue-50 text-blue-600 font-semibold' : 'hover:bg-gray-100' }}">
+                <span>📢</span> Announcement
+        </a>
+
     </nav>
 </aside>
